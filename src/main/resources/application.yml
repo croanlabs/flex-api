@@ -1,4 +1,3 @@
-
 spring:
     application:
         name: Flex API
@@ -33,3 +32,6 @@ spring:
       deserialization:
         fail-on-unknown-properties: false
         read-unknown-enum-values-using-default-value: true
+
+liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.xml
