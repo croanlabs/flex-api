@@ -38,3 +38,17 @@ The suggested development workflow is as follows:
 - Run `mvn compile liquibase:diff`
 - A new change log is created in `/target/db_changelog_diff.xml`
 - Review and add changelog entries to `src/main/resources/db/changelog/db-changelog-master.xml`
+
+## Docker Image Publish
+
+Assuming you have docker already installed on your client machine. 
+To create and publish a docker image in amazon you need to login into amazon on the command line. This can be done by
+executing the following command if the account is your default profile
+    
+    aws ecr get-login --region eu-central-1
+    
+Then execute the docker login command which is produced from the output. Once you are logged in then execute the following
+
+    ./bin/docker-publish.sh tag
+
+
