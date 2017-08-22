@@ -20,5 +20,12 @@
     <changeSet author="j_bax (generated)" id="1502809141960-3">
         <addUniqueConstraint columnNames="user_id" constraintName="UC_USERUSER_ID_COL" tableName="user"/>
     </changeSet>
+    <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql">
+        <sql>
+            GRANT USAGE ON SCHEMA flex_admin to flex_app;
+            GRANT select,insert,update,delete on all tables in schema flex_admin to flex_app;
+            GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA flex_admin to flex_app;
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>

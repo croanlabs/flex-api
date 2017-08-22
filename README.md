@@ -49,6 +49,8 @@ executing the following command if the account is your default profile
     
 Then execute the docker login command which is produced from the output. Once you are logged in then execute the following
 
-    ./bin/docker-publish.sh tag
+    ./bin/docker-publish-cloud.sh tag
 
+If you wish to just publish to your local registry only then execute 
 
+    ./bin/docker-publish-local.sh tag

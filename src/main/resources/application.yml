@@ -5,10 +5,16 @@ spring:
         console:
             enabled: false
     datasource:
-      type: com.zaxxer.hikari.HikariDataSource
-      url: jdbc:h2:file:./target/h2db/db/flexApiDb;DB_CLOSE_DELAY=-1
-      username: gm
-      password:
+      db_admin_pool:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:h2:file:./target/h2db/db/flexApiDb;DB_CLOSE_DELAY=-1
+        username: gm
+        password:
+      application_pool:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:h2:file:./target/h2db/db/flexApiDb;DB_CLOSE_DELAY=-1
+        username: gm
+        password:
     jpa:
       open-in-view: false
       hibernate:
