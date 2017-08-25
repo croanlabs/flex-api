@@ -42,12 +42,13 @@ echo "Copied $JAR_NAME to $DOCKER_BUILD_DIR"
 cd $DOCKER_BUILD_DIR
 
 echo "*** About to build image locally for build target \"$BUILD_PROFILE\" and tag \"$BUILD_TAG\""
-docker build -t "${DOCKER_REGISTRY}/${DOCKER_REPOSITORY}:${BUILD_TAG}" --build-arg SPRING_PROFILE=$BUILD_PROFILE .
+docker build -t ${DOCKER_REPOSITORY} --build-arg SPRING_PROFILE=$BUILD_PROFILE .
+docker tag ${DOCKER_REPOSITORY}:${BUILD_TAG} ${DOCKER_REGISTRY}/${DOCKER_REPOSITORY}:${BUILD_TAG}
+
 if [ "$BUILD_PROFILE" = "prod" ]
 then
     #only push if its a production image.
-    echo "About to tag and PUSH ${DOCKER_REGISTRY}/${DOCKER_REPOSITORY}:${BUILD_TAG}"
-    docker tag ${DOCKER_REPOSITORY}:${BUILD_TAG} ${DOCKER_REGISTRY}/${DOCKER_REPOSITORY}:${BUILD_TAG}
-    docker push ${DOCKER_REGISTRY}/${DOCKER_REPOSITORY}:${BUILD_TAG}
+    echo "Pushing ${DOCKER_REGISTRY}/${DOCKER_REPOSITORY}:${BUILD_TAG}"
+    docker push "${DOCKER_REGISTRY}/${DOCKER_REPOSITORY}:${BUILD_TAG}"
 fi
 
