@@ -1,0 +1,18 @@
+spring:
+    datasource:
+      db_admin_pool:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:postgresql://postgres-db:5432/postgres
+        username: flex_admin
+        password: flex_admin_#987
+      application_pool:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:postgresql://postgres-db:5432/postgres
+        username: flex_app
+        password: flex_app_#123
+    jpa:
+      show-sql: true
+      properties:
+        hibernate:
+          default_schema: flex_admin
+
