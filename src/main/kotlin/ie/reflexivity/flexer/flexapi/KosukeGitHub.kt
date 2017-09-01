@@ -15,8 +15,8 @@ import org.kohsuke.github.PagedIterator
 // https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
 
 private const val ORGANISATION = "ethereum"
-private const val USER = "GitHubUserName"
-private const val TOKEN = "addYouToken"
+private const val USER = "lovelyliatroim"
+private const val TOKEN = "dce4b8ad10dad49a0b1b3f9da6b64cfbfaf401e3"
 
 /*How to handle paging??
 The page itertaor handles it for you, if you call next it will iterate under the hood through the pages.
