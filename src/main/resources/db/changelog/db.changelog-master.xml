@@ -20,6 +20,32 @@
     <changeSet author="j_bax (generated)" id="1502809141960-3">
         <addUniqueConstraint columnNames="user_id" constraintName="UC_USERUSER_ID_COL" tableName="user"/>
     </changeSet>
+
+    <changeSet author="j_bax (generated)" id="1504281101756-1">
+        <createSequence sequenceName="project_type_sequence"/>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1504281101756-2">
+        <createTable tableName="project_type">
+            <column name="project_type_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="git_hub_organisation" type="VARCHAR(255)"/>
+            <column name="github_url" type="VARCHAR(255)"/>
+            <column name="project_home_page" type="VARCHAR(255)"/>
+            <column name="project_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1504281101756-3">
+        <addPrimaryKey columnNames="project_type_id" constraintName="project_typePK" tableName="project_type"/>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1504281101756-4">
+        <addUniqueConstraint columnNames="project_type" constraintName="UC_PROJECT_TYPEPROJECT_TYPE_COL" tableName="project_type"/>
+    </changeSet>
+
+
+
     <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql" runAlways="true">
         <sql>
             GRANT USAGE ON SCHEMA flex_admin to flex_app;
