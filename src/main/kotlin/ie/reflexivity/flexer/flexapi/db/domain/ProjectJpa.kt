@@ -33,7 +33,7 @@ data class ProjectJpa(
         val gitHubOrganisation : String
 ){
     companion object {
-        internal const val TABLE_NAME = "projectType"
+        internal const val TABLE_NAME = "project"
         internal const val ID_NAME = TABLE_NAME + ID_SUFFIX
         private const val SEQUENCE_NAME = TABLE_NAME + SEQUENCE_SUFFIX
     }
