@@ -30,6 +30,12 @@ Integration tests are not run with the default developer profile. You can run th
 
      mvn clean verify -P integration-test
 
+### View Database
+
+When in development mode you can view the database simply by going to http://localhost:8080/h2-console
+
+Give in the jdbc url of "jdbc:h2:file:./target/h2db/db/flexApiDb;DB_CLOSE_DELAY=-1" and you will connect.
+
 
 ### DB Changelog
 

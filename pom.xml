@@ -31,6 +31,7 @@
 		<mockito.kotlin.version>1.4.0</mockito.kotlin.version>
 		<postgres.driver.version>9.1-901-1.jdbc4</postgres.driver.version>
 		<kosuke.github.version>1.86</kosuke.github.version>
+        <javax.inject.version>1</javax.inject.version>
 	</properties>
 
 	<dependencies>
@@ -42,6 +43,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib-jre8</artifactId>
@@ -53,7 +59,13 @@
 			<version>${kotlin.version}</version>
 		</dependency>
 
-		<dependency>
+
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
+        </dependency>
+        <dependency>
 			<groupId>org.kohsuke</groupId>
 			<artifactId>github-api</artifactId>
 			<version>${kosuke.github.version}</version>

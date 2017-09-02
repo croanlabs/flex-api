@@ -70,6 +70,20 @@
     <changeSet author="j_bax (generated)" id="1504300891405-10">
         <addUniqueConstraint columnNames="user_id" constraintName="UC_USERUSER_ID_COL" tableName="user"/>
     </changeSet>
+    <changeSet author="j_bax (generated)" id="1504359310024-1">
+        <addColumn tableName="git_hub_organisation">
+            <column name="project_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1504359310024-2">
+        <addUniqueConstraint columnNames="project_id" constraintName="UK_pfkdv6r0nogj6rqxw1tle6kea" tableName="git_hub_organisation"/>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1504359310024-3">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="git_hub_organisation" constraintName="FKobramt1x56vmphir2ukkh4638" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project"/>
+    </changeSet>
+
 
 
 

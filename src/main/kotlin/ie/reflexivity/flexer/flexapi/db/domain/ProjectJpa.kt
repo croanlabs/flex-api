@@ -2,13 +2,16 @@ package ie.reflexivity.flexer.flexapi.db.domain
 
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa.Companion.TABLE_NAME
 import ie.reflexivity.flexer.flexapi.model.ProjectType
+import javax.persistence.CascadeType.ALL
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.persistence.FetchType.LAZY
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType.SEQUENCE
 import javax.persistence.Id
+import javax.persistence.OneToOne
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 

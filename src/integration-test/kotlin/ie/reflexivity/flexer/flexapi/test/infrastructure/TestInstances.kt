@@ -6,9 +6,8 @@ import ie.reflexivity.flexer.flexapi.model.ProjectType.ETHERUM
 import java.time.LocalDateTime
 
 
-fun GitHubOrganisationJpa.Companion.testInstance() = GitHubOrganisationJpa(
+fun GitHubOrganisationJpa.Companion.testInstance(projectJpa: ProjectJpa = ProjectJpa.testInstance()) = GitHubOrganisationJpa(
         gitHubId = 12,
-        description = "anyDescription",
         blog = "anyBlog",
         email = "anyEmail",
         company = "anyCompany",
@@ -17,9 +16,10 @@ fun GitHubOrganisationJpa.Companion.testInstance() = GitHubOrganisationJpa(
         noOfFollowers = 20,
         noOfPublicGists = 100,
         following = 100,
+        htmlUrl = "http://any.com",
         createdAt = LocalDateTime.now(),
         updatedAt = LocalDateTime.now(),
-        projectJpa = ProjectJpa.testInstance()
+        projectJpa = projectJpa
 )
 
 fun ProjectJpa.Companion.testInstance() = ProjectJpa(

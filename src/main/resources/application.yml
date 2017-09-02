@@ -28,6 +28,7 @@ spring:
         hibernate.cache.use_second_level_cache: false
         hibernate.cache.use_query_cache: false
         hibernate.generate_statistics: false
+        hibernate.jdbc.batch_size: 20
     jackson:
       default-property-inclusion: non_null
       serialization:
@@ -41,3 +42,8 @@ spring:
 
 liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.xml
+
+github:
+   username: theseathesea
+   token: 42f00480e6fe19686585694f6746b4f519a5c23f
+

@@ -29,15 +29,13 @@ data class GitHubOrganisationJpa(
 
         val gitHubId : Int,
 
-        val description : String? = null,
+        val blog : String? = null,
 
-        val blog : String,
+        val email : String? = null,
 
-        val email : String,
+        val company : String? = null,
 
-        val company : String,
-
-        val location : String,
+        val location : String? = null,
 
         val noOfPublicRepos: Int? = 0,
 
