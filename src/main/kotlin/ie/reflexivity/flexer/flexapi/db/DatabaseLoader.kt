@@ -5,7 +5,6 @@ import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.domain.UserJpa
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.UserJpaRepository
-import ie.reflexivity.flexer.flexapi.model.ProjectType
 import ie.reflexivity.flexer.flexapi.model.ProjectType.EOS
 import ie.reflexivity.flexer.flexapi.model.ProjectType.ETHERUM
 import ie.reflexivity.flexer.flexapi.model.ProjectType.TEZOS

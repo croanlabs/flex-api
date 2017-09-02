@@ -3,28 +3,38 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet author="j_bax (generated)" id="1502809141960-1">
+    <changeSet author="j_bax (generated)" id="1504300891405-1">
+        <createSequence sequenceName="git_hub_organisation_sequence"/>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1504300891405-2">
         <createSequence sequenceName="hibernate_sequence"/>
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1502809141960-2">
-        <createTable tableName="user">
-            <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints primaryKey="true" primaryKeyName="userPK"/>
-            </column>
-            <column name="password_hash" type="VARCHAR(60)"/>
-            <column name="user_id" type="VARCHAR(50)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1502809141960-3">
-        <addUniqueConstraint columnNames="user_id" constraintName="UC_USERUSER_ID_COL" tableName="user"/>
-    </changeSet>
-
-    <changeSet author="j_bax (generated)" id="1504286891545-1">
+    <changeSet author="j_bax (generated)" id="1504300891405-3">
         <createSequence sequenceName="project_sequence"/>
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504286891545-2">
+    <changeSet author="j_bax (generated)" id="1504300891405-4">
+        <createTable tableName="git_hub_organisation">
+            <column name="git_hub_organisation_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="blog" type="VARCHAR(255)"/>
+            <column name="company" type="VARCHAR(255)"/>
+            <column name="created_at" type="BINARY(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="following" type="INT"/>
+            <column name="git_hub_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="html_url" type="VARCHAR(255)"/>
+            <column name="location" type="VARCHAR(255)"/>
+            <column name="no_of_followers" type="INT"/>
+            <column name="no_of_public_gists" type="INT"/>
+            <column name="no_of_public_repos" type="INT"/>
+            <column name="updated_at" type="BINARY(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1504300891405-5">
         <createTable tableName="project">
             <column name="project_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -37,12 +47,31 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504286891545-3">
+    <changeSet author="j_bax (generated)" id="1504300891405-6">
+        <createTable tableName="user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="userPK"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(60)"/>
+            <column name="user_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1504300891405-7">
+        <addPrimaryKey columnNames="git_hub_organisation_id" constraintName="git_hub_organisationPK" tableName="git_hub_organisation"/>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1504300891405-8">
         <addPrimaryKey columnNames="project_id" constraintName="projectPK" tableName="project"/>
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504286891545-4">
+    <changeSet author="j_bax (generated)" id="1504300891405-9">
         <addUniqueConstraint columnNames="project_type" constraintName="UC_PROJECTPROJECT_TYPE_COL" tableName="project"/>
     </changeSet>
+    <changeSet author="j_bax (generated)" id="1504300891405-10">
+        <addUniqueConstraint columnNames="user_id" constraintName="UC_USERUSER_ID_COL" tableName="user"/>
+    </changeSet>
+
+
 
     <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql" runAlways="true">
         <sql>
