@@ -4,10 +4,10 @@ import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
 import ie.reflexivity.flexer.flexapi.logger
 import org.kohsuke.github.GHOrganization
+import org.kohsuke.github.GHRateLimit
 import org.kohsuke.github.GitHub
 import org.springframework.stereotype.Service
 import org.springframework.util.StopWatch
-
 
 interface GitHubScraper {
     fun scrape()
@@ -31,14 +31,27 @@ class GitHubScraperImpl(
         stopWatch.start()
         projects.forEach {
             log.info("Starting Scraping data for ${it.projectType}")
-            scrapeOrganisation(it)
-            val rate = gitHub.rateLimit
-            val exhaustedRate = currentRate.remaining - rate.remaining
-            log.info("Github rate limit now is ${rate.remaining}. Used calls for ${it.projectType} was ${exhaustedRate}")
-            currentRate = rate
+            if (it.isGitOrganistation()) {
+                scrapeOrganisation(it)
+            } else if(it.isGitRepository()){
+                scrapeRepository(it)
+            }
+            currentRate = printStatistics(currentRate, it)
         }
         stopWatch.stop()
         log.info("Finished Github Scraping data. TotalExecution Time ${stopWatch.totalTimeSeconds}")
+    }
+
+    private fun scrapeRepository(projectJpa: ProjectJpa) {
+        val repository = gitHub.getRepository(projectJpa.gitHubRepository)
+        gitHubRepositoryScraper.scrape(mutableListOf(repository), projectJpa)
+    }
+
+    private fun printStatistics(currentRate: GHRateLimit, it: ProjectJpa): GHRateLimit {
+        val rate = gitHub.rateLimit
+        val exhaustedRate = currentRate.remaining - rate.remaining
+        log.info("Github rate limit now is ${rate.remaining}. Used calls for ${it.projectType} was ${exhaustedRate}")
+        return rate
     }
 
     private fun scrapeOrganisation(projectJpa: ProjectJpa) {

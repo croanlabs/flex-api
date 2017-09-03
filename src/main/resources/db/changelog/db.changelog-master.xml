@@ -117,6 +117,12 @@
     <changeSet author="j_bax (generated)" id="1504463302027-18">
         <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="git_hub_organisation" constraintName="FKobramt1x56vmphir2ukkh4638" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project" />
     </changeSet>
+    <changeSet author="j_bax (generated)" id="1504469717160-1">
+        <addColumn tableName="project">
+            <column name="git_hub_repository" type="varchar(255)" />
+        </addColumn>
+    </changeSet>
+
 
     <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql" runAlways="true">
         <sql>

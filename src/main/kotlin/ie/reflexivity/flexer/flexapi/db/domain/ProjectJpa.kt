@@ -2,16 +2,13 @@ package ie.reflexivity.flexer.flexapi.db.domain
 
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa.Companion.TABLE_NAME
 import ie.reflexivity.flexer.flexapi.model.ProjectType
-import javax.persistence.CascadeType.ALL
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
-import javax.persistence.FetchType.LAZY
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType.SEQUENCE
 import javax.persistence.Id
-import javax.persistence.OneToOne
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 
@@ -26,18 +23,26 @@ data class ProjectJpa(
         val id: Long = 0,
 
         @Enumerated(EnumType.STRING)
-        @Column(unique = true,nullable = false)
+        @Column(unique = true, nullable = false)
         val projectType: ProjectType,
 
-        val projectHomePage : String,
+        val projectHomePage: String,
 
-        val githubUrl : String,
+        val githubUrl: String,
 
-        val gitHubOrganisation : String
-){
+        val gitHubOrganisation: String? = null,
+
+        val gitHubRepository: String? = null
+
+) {
     companion object {
         internal const val TABLE_NAME = "project"
         internal const val ID_NAME = TABLE_NAME + ID_SUFFIX
         private const val SEQUENCE_NAME = TABLE_NAME + SEQUENCE_SUFFIX
     }
+
+    fun isGitOrganistation() = gitHubOrganisation != null
+
+    fun isGitRepository() = gitHubRepository != null
+
 }
