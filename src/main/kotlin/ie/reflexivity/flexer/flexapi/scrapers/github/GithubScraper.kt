@@ -33,7 +33,7 @@ class GitHubScraperImpl(
             log.info("Starting Scraping data for ${it.projectType}")
             if (it.isGitOrganistation()) {
                 scrapeOrganisation(it)
-            } else if(it.isGitRepository()){
+            } else if (it.isGitRepository()) {
                 scrapeRepository(it)
             }
             currentRate = printStatistics(currentRate, it)
