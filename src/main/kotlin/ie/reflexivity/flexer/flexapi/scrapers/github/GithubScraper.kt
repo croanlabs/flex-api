@@ -6,6 +6,7 @@ import ie.reflexivity.flexer.flexapi.logger
 import org.kohsuke.github.GHOrganization
 import org.kohsuke.github.GitHub
 import org.springframework.stereotype.Service
+import org.springframework.util.StopWatch
 
 
 interface GitHubScraper {
@@ -21,14 +22,23 @@ class GitHubScraperImpl(
 ) : GitHubScraper {
 
     private val log by logger()
+    private val stopWatch = StopWatch()
 
     override fun scrape() {
         val projects = projectJpaRepository.findAll()
-        log.info("Starting Scraping data for ${projects.size}")
+        var currentRate = gitHub.rateLimit
+        log.info("Starting Scraping data for ${projects.size}. GithubRate settings ${currentRate}")
+        stopWatch.start()
         projects.forEach {
             log.info("Starting Scraping data for ${it.projectType}")
             scrapeOrganisation(it)
+            val rate = gitHub.rateLimit
+            val exhaustedRate = currentRate.remaining - rate.remaining
+            log.info("Github rate limit now is ${rate.remaining}. Used calls for ${it.projectType} was ${exhaustedRate}")
+            currentRate = rate
         }
+        stopWatch.stop()
+        log.info("Finished Github Scraping data. TotalExecution Time ${stopWatch.totalTimeSeconds}")
     }
 
     private fun scrapeOrganisation(projectJpa: ProjectJpa) {
