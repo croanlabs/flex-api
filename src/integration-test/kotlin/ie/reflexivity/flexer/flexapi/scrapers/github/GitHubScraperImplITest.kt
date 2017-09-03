@@ -8,12 +8,10 @@ import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubOrganisationJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
 import ie.reflexivity.flexer.flexapi.extensions.toDate
-import ie.reflexivity.flexer.flexapi.extensions.toGitHubOrganisationJpa
 import ie.reflexivity.flexer.flexapi.test.infrastructure.testInstance
-import org.junit.runner.RunWith
-
-import org.junit.Assert.*
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.kohsuke.github.GHOrganization
 import org.kohsuke.github.GitHub
 import org.springframework.boot.test.context.SpringBootTest
@@ -21,21 +19,22 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.test.context.junit4.SpringRunner
 import java.net.URL
 import javax.inject.Inject
-import org.assertj.core.api.Assertions.assertThat
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @CleanDatabase
 class GitHubScraperImplITest {
 
-    @Inject lateinit var gitHubOrganisationRepository : GitHubOrganisationJpaRepository
-    @Inject lateinit var projectJpaRepository : ProjectJpaRepository
+    @Inject lateinit var gitHubOrganisationRepository: GitHubOrganisationJpaRepository
+    @Inject lateinit var projectJpaRepository: ProjectJpaRepository
+    @Inject lateinit var gitHubRepositoryScraper: GitHubRepositoryScraperImpl
+
 
     private val gitHub: GitHub = mock()
     private val gitHubOrganisation = "gitHubOrg"
 
     @Test
-    fun `Given a project When scraping from github Then we expect to see the githuborganisation saved`(){
+    fun `Given a project When scraping from github Then we expect to see the githuborganisation saved`() {
         val projectJpa = createAndSaveProject()
         setUpGithubClientResponses(GitHubOrganisationJpa.testInstance(projectJpa))
 
@@ -48,15 +47,14 @@ class GitHubScraperImplITest {
 
 
     @Test
-    fun `Given a project with an existing githuborganisation When scraping from github Then we expect the existing github organisation to be updated`(){
+    fun `Given a project with an existing githuborganisation When scraping from github and blog is different Then we expect the existing github organisation to be updated`() {
         val projectJpa = createAndSaveProject()
-        val currentOrganisation = GitHubOrganisationJpa.testInstance(projectJpa = projectJpa)
+        val currentOrganisationJpa = GitHubOrganisationJpa.testInstance(projectJpa = projectJpa)
                 .copy(blog = "www.blog.com")
-        createAndSaveGitHubOrganisation(currentOrganisation)
-        val expectedResult = currentOrganisation.copy(blog = "www.newblog.com")
-
-        val organisation = ghOrganisation( expectedResult)
-        whenever(gitHub.getOrganization(gitHubOrganisation)).thenReturn(organisation)
+        createAndSaveGitHubOrganisation(currentOrganisationJpa)
+        val expectedResult = currentOrganisationJpa.copy(blog = "www.newblog.com")
+        val ghOrganisation = createGHOrganisation(expectedResult)
+        whenever(gitHub.getOrganization(gitHubOrganisation)).thenReturn(ghOrganisation)
 
         testee().scrape()
 
@@ -66,18 +64,18 @@ class GitHubScraperImplITest {
     }
 
     private fun setUpGithubClientResponses(gitHubOrganisationJpa: GitHubOrganisationJpa) {
-        val organisation = ghOrganisation(gitHubOrganisationJpa)
+        val organisation = createGHOrganisation(gitHubOrganisationJpa)
         whenever(gitHub.getOrganization(gitHubOrganisation)).thenReturn(organisation)
     }
 
-    private fun testee() = GitHubScraperImpl(projectJpaRepository, gitHubOrganisationRepository, gitHub)
+    private fun testee() = GitHubScraperImpl(gitHubRepositoryScraper, projectJpaRepository, gitHubOrganisationRepository, gitHub)
 
     private fun createAndSaveProject() =
-        projectJpaRepository.save(ProjectJpa.testInstance().copy(gitHubOrganisation = gitHubOrganisation))
+            projectJpaRepository.save(ProjectJpa.testInstance().copy(gitHubOrganisation = gitHubOrganisation))
 
-    private fun createAndSaveGitHubOrganisation(org :GitHubOrganisationJpa) = gitHubOrganisationRepository.save(org)
+    private fun createAndSaveGitHubOrganisation(org: GitHubOrganisationJpa) = gitHubOrganisationRepository.save(org)
 
-    private fun ghOrganisation(gitHubOrganisationJpa: GitHubOrganisationJpa) :GHOrganization{
+    private fun createGHOrganisation(gitHubOrganisationJpa: GitHubOrganisationJpa): GHOrganization {
         val ghOrganisation = mock<GHOrganization>()
         gitHubOrganisationJpa.run {
             whenever(ghOrganisation.blog).thenReturn(blog)

@@ -5,7 +5,6 @@ import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
 import ie.reflexivity.flexer.flexapi.test.infrastructure.testInstance
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.junit4.SpringRunner
 import org.assertj.core.api.Assertions.*
 import javax.inject.Inject

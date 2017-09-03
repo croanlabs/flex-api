@@ -28,7 +28,10 @@ spring:
         hibernate.cache.use_second_level_cache: false
         hibernate.cache.use_query_cache: false
         hibernate.generate_statistics: false
-        hibernate.jdbc.batch_size: 20
+        hibernate.jdbc.batch_size: 30
+        hibernate.order_inserts: true
+        hibernate.order_updates: true
+        hibernate.jdbc.batch_versioned_data: true
     jackson:
       default-property-inclusion: non_null
       serialization:

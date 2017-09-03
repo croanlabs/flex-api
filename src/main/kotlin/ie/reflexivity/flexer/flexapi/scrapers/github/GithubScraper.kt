@@ -1,24 +1,25 @@
 package ie.reflexivity.flexer.flexapi.scrapers.github
 
-import ie.reflexivity.flexer.flexapi.db.domain.GitHubOrganisationJpa
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubOrganisationJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
 import ie.reflexivity.flexer.flexapi.extensions.toGitHubOrganisationJpa
 import ie.reflexivity.flexer.flexapi.logger
-import org.kohsuke.github.GHOrganization
 import org.kohsuke.github.GitHub
+import org.springframework.stereotype.Service
 
 
 interface GitHubScraper {
     fun scrape()
 }
 
+@Service
 class GitHubScraperImpl(
+        private val gitHubRepositoryScraper: GitHubRepositoryScraper,
         private val projectJpaRepository: ProjectJpaRepository,
         private val gitHubOrgJpaRepository: GitHubOrganisationJpaRepository,
-        private val gitHub : GitHub
-): GitHubScraper {
+        private val gitHub: GitHub
+) : GitHubScraper {
 
     private val log by logger()
 
@@ -30,26 +31,18 @@ class GitHubScraperImpl(
         }
     }
 
-    private fun scrape(projectJpa: ProjectJpa){
+    private fun scrape(projectJpa: ProjectJpa) {
         log.info("Starting Scraping data for ${projectJpa.projectType}")
-        //val github = GitHub.connect(GitHubCredentials.USER, GitHubCredentials.TOKEN)
         val organisation = gitHub.getOrganization(projectJpa.gitHubOrganisation)
-        val gitHubOrgJpa = gitHubOrgJpaRepository.findByGitHubId(organisation.id)
-        if(gitHubOrgJpa == null){
-            gitHubOrgJpaRepository.save(organisation.toGitHubOrganisationJpa(projectJpa))
-        }else{
-            val organisationJpa = organisation.toGitHubOrganisationJpa((projectJpa)).copy(id = gitHubOrgJpa.id)
-            gitHubOrgJpaRepository.save(organisationJpa)
+        var latestOrganisationJpa = organisation.toGitHubOrganisationJpa(projectJpa)
+        val existingOrganisationJpa = gitHubOrgJpaRepository.findByGitHubId(organisation.id)
+        if (existingOrganisationJpa != null) {
+            latestOrganisationJpa = latestOrganisationJpa.copy(id = existingOrganisationJpa.id)
         }
-        scrapeRepositories(organisation,projectJpa)
+        gitHubOrgJpaRepository.save(latestOrganisationJpa)
 
-    }
-
-    private fun scrapeRepositories(organisation: GHOrganization, projectJpa: ProjectJpa){
         val repositories = organisation.repositories.values
-        repositories.forEach {
-
-        }
+        gitHubRepositoryScraper.scrape(repositories, projectJpa)
     }
 
 }

@@ -3,89 +3,120 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet author="j_bax (generated)" id="1504300891405-1">
-        <createSequence sequenceName="git_hub_organisation_sequence"/>
+    <changeSet author="j_bax (generated)" id="1504463302027-1">
+        <createSequence sequenceName="git_hub_organisation_sequence" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504300891405-2">
-        <createSequence sequenceName="hibernate_sequence"/>
+    <changeSet author="j_bax (generated)" id="1504463302027-2">
+        <createSequence sequenceName="git_hub_repository_sequence" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504300891405-3">
-        <createSequence sequenceName="project_sequence"/>
+    <changeSet author="j_bax (generated)" id="1504463302027-3">
+        <createSequence sequenceName="hibernate_sequence" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504300891405-4">
+    <changeSet author="j_bax (generated)" id="1504463302027-4">
+        <createSequence sequenceName="project_sequence" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1504463302027-5">
         <createTable tableName="git_hub_organisation">
             <column name="git_hub_organisation_id" type="BIGINT">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
-            <column name="blog" type="VARCHAR(255)"/>
-            <column name="company" type="VARCHAR(255)"/>
-            <column name="created_at" type="BINARY(255)"/>
-            <column name="description" type="VARCHAR(255)"/>
-            <column name="email" type="VARCHAR(255)"/>
-            <column name="following" type="INT"/>
-            <column name="git_hub_id" type="INT">
-                <constraints nullable="false"/>
+            <column name="blog" type="VARCHAR(255)" />
+            <column name="company" type="VARCHAR(255)" />
+            <column name="created_at" type="BINARY(255)" />
+            <column name="email" type="VARCHAR(255)" />
+            <column name="following" type="INT" />
+            <column name="git_hub_id" type="INT" />
+            <column name="html_url" type="VARCHAR(255)" />
+            <column name="location" type="VARCHAR(255)" />
+            <column name="no_of_followers" type="INT" />
+            <column name="no_of_public_gists" type="INT" />
+            <column name="no_of_public_repos" type="INT" />
+            <column name="updated_at" type="BINARY(255)" />
+            <column name="project_id" type="BIGINT">
+                <constraints nullable="false" />
             </column>
-            <column name="html_url" type="VARCHAR(255)"/>
-            <column name="location" type="VARCHAR(255)"/>
-            <column name="no_of_followers" type="INT"/>
-            <column name="no_of_public_gists" type="INT"/>
-            <column name="no_of_public_repos" type="INT"/>
-            <column name="updated_at" type="BINARY(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504300891405-5">
+    <changeSet author="j_bax (generated)" id="1504463302027-6">
+        <createTable tableName="git_hub_repository">
+            <column name="git_hub_repository_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="forks_count" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="git_hub_id" type="INT" />
+            <column name="language" type="VARCHAR(255)" />
+            <column name="name" type="VARCHAR(255)" />
+            <column name="open_issues_count" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="owner_name" type="VARCHAR(255)" />
+            <column name="star_gazers_count" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="watchers_count" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="project_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1504463302027-7">
         <createTable tableName="project">
             <column name="project_id" type="BIGINT">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
-            <column name="git_hub_organisation" type="VARCHAR(255)"/>
-            <column name="github_url" type="VARCHAR(255)"/>
-            <column name="project_home_page" type="VARCHAR(255)"/>
+            <column name="git_hub_organisation" type="VARCHAR(255)" />
+            <column name="github_url" type="VARCHAR(255)" />
+            <column name="project_home_page" type="VARCHAR(255)" />
             <column name="project_type" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504300891405-6">
+    <changeSet author="j_bax (generated)" id="1504463302027-8">
         <createTable tableName="user">
             <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints primaryKey="true" primaryKeyName="userPK"/>
+                <constraints primaryKey="true" primaryKeyName="userPK" />
             </column>
-            <column name="password_hash" type="VARCHAR(60)"/>
+            <column name="password_hash" type="VARCHAR(60)" />
             <column name="user_id" type="VARCHAR(50)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504300891405-7">
-        <addPrimaryKey columnNames="git_hub_organisation_id" constraintName="git_hub_organisationPK" tableName="git_hub_organisation"/>
+    <changeSet author="j_bax (generated)" id="1504463302027-9">
+        <addPrimaryKey columnNames="git_hub_organisation_id" constraintName="git_hub_organisationPK" tableName="git_hub_organisation" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504300891405-8">
-        <addPrimaryKey columnNames="project_id" constraintName="projectPK" tableName="project"/>
+    <changeSet author="j_bax (generated)" id="1504463302027-10">
+        <addPrimaryKey columnNames="git_hub_repository_id" constraintName="git_hub_repositoryPK" tableName="git_hub_repository" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504300891405-9">
-        <addUniqueConstraint columnNames="project_type" constraintName="UC_PROJECTPROJECT_TYPE_COL" tableName="project"/>
+    <changeSet author="j_bax (generated)" id="1504463302027-11">
+        <addPrimaryKey columnNames="project_id" constraintName="projectPK" tableName="project" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504300891405-10">
-        <addUniqueConstraint columnNames="user_id" constraintName="UC_USERUSER_ID_COL" tableName="user"/>
+    <changeSet author="j_bax (generated)" id="1504463302027-12">
+        <addUniqueConstraint columnNames="git_hub_id" constraintName="UC_GIT_HUB_ORGANISATIONGIT_HUB_ID_COL" tableName="git_hub_organisation" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504359310024-1">
-        <addColumn tableName="git_hub_organisation">
-            <column name="project_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
+    <changeSet author="j_bax (generated)" id="1504463302027-13">
+        <addUniqueConstraint columnNames="git_hub_id" constraintName="UC_GIT_HUB_REPOSITORYGIT_HUB_ID_COL" tableName="git_hub_repository" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504359310024-2">
-        <addUniqueConstraint columnNames="project_id" constraintName="UK_pfkdv6r0nogj6rqxw1tle6kea" tableName="git_hub_organisation"/>
+    <changeSet author="j_bax (generated)" id="1504463302027-14">
+        <addUniqueConstraint columnNames="project_type" constraintName="UC_PROJECTPROJECT_TYPE_COL" tableName="project" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1504359310024-3">
-        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="git_hub_organisation" constraintName="FKobramt1x56vmphir2ukkh4638" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project"/>
+    <changeSet author="j_bax (generated)" id="1504463302027-15">
+        <addUniqueConstraint columnNames="user_id" constraintName="UC_USERUSER_ID_COL" tableName="user" />
     </changeSet>
-
-
-
+    <changeSet author="j_bax (generated)" id="1504463302027-16">
+        <addUniqueConstraint columnNames="project_id" constraintName="UK_pfkdv6r0nogj6rqxw1tle6kea" tableName="git_hub_organisation" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1504463302027-17">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="git_hub_repository" constraintName="FK4eps1hroxk5j1wtpoxy4blgrk" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1504463302027-18">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="git_hub_organisation" constraintName="FKobramt1x56vmphir2ukkh4638" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project" />
+    </changeSet>
 
     <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql" runAlways="true">
         <sql>

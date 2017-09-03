@@ -1,7 +1,6 @@
 package ie.reflexivity.flexer.flexapi.db.domain
 
-import ie.reflexivity.flexer.flexapi.db.domain.GitHubOrganisationJpa.Companion.TABLE_NAME
-import java.time.LocalDateTime
+import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa.Companion.TABLE_NAME
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -10,16 +9,15 @@ import javax.persistence.GenerationType.SEQUENCE
 import javax.persistence.Id
 import javax.persistence.Index
 import javax.persistence.JoinColumn
-import javax.persistence.OneToOne
+import javax.persistence.ManyToOne
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 
 @Entity
 @Table(name = TABLE_NAME, indexes = arrayOf(
         Index(name = "IDX_${TABLE_NAME}_GITHUBID", columnList = "gitHubId")
-)
-)
-data class GitHubOrganisationJpa(
+))
+data class GitHubRepositoryJpa(
 
         @Id
         @GeneratedValue(strategy = SEQUENCE, generator = SEQUENCE_NAME)
@@ -28,37 +26,29 @@ data class GitHubOrganisationJpa(
         val id: Long = 0,
 
         @JoinColumn(name = ProjectJpa.ID_NAME)
-        @OneToOne(optional = false, fetch = FetchType.LAZY)
+        @ManyToOne(optional = false, fetch = FetchType.LAZY)
         val projectJpa: ProjectJpa,
 
         @Column(unique = true)
         val gitHubId: Int,
 
-        val blog: String? = null,
+        val name: String,
 
-        val email: String? = null,
+        val language: String? = null,
 
-        val company: String? = null,
+        val ownerName: String,
 
-        val location: String? = null,
+        val starGazersCount: Int = 0,
 
-        val noOfPublicRepos: Int? = 0,
+        val watchersCount: Int = 0,
 
-        val htmlUrl: String? = null,
+        val forksCount: Int = 0,
 
-        val noOfPublicGists: Int? = 0,
-
-        val noOfFollowers: Int? = 0,
-
-        val following: Int? = 0,
-
-        val createdAt: LocalDateTime? = null,
-
-        val updatedAt: LocalDateTime? = null
+        val openIssuesCount: Int = 0
 
 ) {
     companion object {
-        internal const val TABLE_NAME = "git_hub_organisation"
+        internal const val TABLE_NAME = "git_hub_repository"
         internal const val ID_NAME = TABLE_NAME + ID_SUFFIX
         private const val SEQUENCE_NAME = TABLE_NAME + SEQUENCE_SUFFIX
     }
