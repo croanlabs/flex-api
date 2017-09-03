@@ -13,7 +13,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.kohsuke.github.GHOrganization
-import org.kohsuke.github.GitHub
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.test.context.junit4.SpringRunner
@@ -23,57 +22,45 @@ import javax.inject.Inject
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @CleanDatabase
-class GitHubScraperImplITest {
+class GitHubOrganisationScraperITest {
 
-    @Inject lateinit var gitHubOrganisationRepository: GitHubOrganisationJpaRepository
+    @Inject private lateinit var testee: GitHubOrganisationScraper
     @Inject lateinit var projectJpaRepository: ProjectJpaRepository
-    @Inject lateinit var gitHubRepositoryScraper: GitHubRepositoryScraperImpl
+    @Inject lateinit var gitHubOrganisationRepository: GitHubOrganisationJpaRepository
 
-
-    private val gitHub: GitHub = mock()
     private val gitHubOrganisation = "gitHubOrg"
 
     @Test
     fun `Given a project When scraping from github Then we expect to see the githuborganisation saved`() {
         val projectJpa = createAndSaveProject()
-        setUpGithubClientResponses(GitHubOrganisationJpa.testInstance(projectJpa))
+        val ghOrganisation = createGHOrganisation(GitHubOrganisationJpa.testInstance(projectJpa))
 
-        testee().scrape()
+        testee.scrape(ghOrganisation, projectJpa)
 
         val organisations = gitHubOrganisationRepository.findAll()
         assertThat(organisations.size).isEqualTo(1)
         assertThat(organisations[0].projectJpa.id).isEqualTo(projectJpa.id)
     }
 
-
     @Test
     fun `Given a project with an existing githuborganisation When scraping from github and blog is different Then we expect the existing github organisation to be updated`() {
         val projectJpa = createAndSaveProject()
         val currentOrganisationJpa = GitHubOrganisationJpa.testInstance(projectJpa = projectJpa)
                 .copy(blog = "www.blog.com")
-        createAndSaveGitHubOrganisation(currentOrganisationJpa)
+        gitHubOrganisationRepository.save(currentOrganisationJpa)
         val expectedResult = currentOrganisationJpa.copy(blog = "www.newblog.com")
         val ghOrganisation = createGHOrganisation(expectedResult)
-        whenever(gitHub.getOrganization(gitHubOrganisation)).thenReturn(ghOrganisation)
 
-        testee().scrape()
+        testee.scrape(ghOrganisation, projectJpa)
 
         val organisations = gitHubOrganisationRepository.findAll()
         assertThat(organisations.size).isEqualTo(1)
         assertThat(organisations[0]).isEqualTo(expectedResult)
     }
 
-    private fun setUpGithubClientResponses(gitHubOrganisationJpa: GitHubOrganisationJpa) {
-        val organisation = createGHOrganisation(gitHubOrganisationJpa)
-        whenever(gitHub.getOrganization(gitHubOrganisation)).thenReturn(organisation)
-    }
-
-    private fun testee() = GitHubScraperImpl(gitHubRepositoryScraper, projectJpaRepository, gitHubOrganisationRepository, gitHub)
-
     private fun createAndSaveProject() =
             projectJpaRepository.save(ProjectJpa.testInstance().copy(gitHubOrganisation = gitHubOrganisation))
 
-    private fun createAndSaveGitHubOrganisation(org: GitHubOrganisationJpa) = gitHubOrganisationRepository.save(org)
 
     private fun createGHOrganisation(gitHubOrganisationJpa: GitHubOrganisationJpa): GHOrganization {
         val ghOrganisation = mock<GHOrganization>()
@@ -93,6 +80,4 @@ class GitHubScraperImplITest {
         }
         return ghOrganisation
     }
-
-
 }
