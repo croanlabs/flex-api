@@ -24,6 +24,12 @@ Run in Production Mode:
        
 Try http://localhost:8080/management/env for environment information.
 
+### Integration Tests
+
+Integration tests are not run with the default developer profile. You can run them by executing by using the integration test profile
+
+     mvn clean verify -P integration-test
+
 
 ### DB Changelog
 
