@@ -60,7 +60,7 @@ data class ProjectJpa(
 
     override fun equals(other: Any?): Boolean {
         if (other == null) return false;
-        if (other?.javaClass != javaClass) return false
+        if (other.javaClass != javaClass) return false
 
         other as ProjectJpa
 

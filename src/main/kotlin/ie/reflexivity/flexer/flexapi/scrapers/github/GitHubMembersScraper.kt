@@ -10,7 +10,7 @@ import org.kohsuke.github.PagedIterable
 import org.springframework.stereotype.Service
 
 interface GitHubMembersScraper {
-    fun scrape(listMembers: PagedIterable<GHUser>, projectJpa: ProjectJpa)
+    fun scrape(members: PagedIterable<GHUser>, detachedProjectJpa: ProjectJpa)
 }
 
 @Service
