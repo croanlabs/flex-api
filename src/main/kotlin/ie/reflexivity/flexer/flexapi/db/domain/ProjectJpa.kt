@@ -1,14 +1,21 @@
 package ie.reflexivity.flexer.flexapi.db.domain
 
+import com.google.common.base.MoreObjects
+import com.google.common.base.Objects
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa.Companion.TABLE_NAME
 import ie.reflexivity.flexer.flexapi.model.ProjectType
+import javax.persistence.CascadeType.ALL
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.persistence.FetchType.EAGER
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType.SEQUENCE
 import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 
@@ -32,7 +39,13 @@ data class ProjectJpa(
 
         val gitHubOrganisation: String? = null,
 
-        val gitHubRepository: String? = null
+        val gitHubRepository: String? = null,
+
+        @ManyToMany(cascade = arrayOf(ALL), fetch = EAGER)
+        @JoinTable(name = "PROJECT_USER", joinColumns = arrayOf(JoinColumn(name = ID_NAME)),
+                inverseJoinColumns = arrayOf(JoinColumn(name = "platformUserId", referencedColumnName = "platformUserId"),
+                        JoinColumn(name = "platform", referencedColumnName = "platform")))
+        val users: MutableSet<UserJpa>? = mutableSetOf()
 
 ) {
     companion object {
@@ -45,4 +58,32 @@ data class ProjectJpa(
 
     fun isGitRepository() = gitHubRepository != null
 
+    override fun equals(other: Any?): Boolean {
+        if (other == null) return false;
+        if (other?.javaClass != javaClass) return false
+
+        other as ProjectJpa
+
+        return Objects.equal(id, other.id)
+                && Objects.equal(projectType, other.projectType)
+                && Objects.equal(projectHomePage, other.projectHomePage)
+                && Objects.equal(githubUrl, other.githubUrl)
+                && Objects.equal(gitHubOrganisation, other.gitHubOrganisation)
+                && Objects.equal(gitHubRepository, other.gitHubRepository)
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hashCode(id, projectType, projectHomePage, githubUrl, gitHubOrganisation, gitHubRepository)
+    }
+
+    override fun toString(): String {
+        return MoreObjects.toStringHelper(this)
+                .add("platformUserId", id)
+                .add("projectType", projectType)
+                .add("projectHomePage", projectHomePage)
+                .add("githubUrl", githubUrl)
+                .add("gitHubOrganisation", gitHubOrganisation)
+                .add("gitHubRepository", gitHubRepository)
+                .toString()
+    }
 }

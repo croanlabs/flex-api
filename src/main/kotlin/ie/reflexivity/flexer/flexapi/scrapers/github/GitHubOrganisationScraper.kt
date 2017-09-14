@@ -5,7 +5,6 @@ import ie.reflexivity.flexer.flexapi.db.repository.GitHubOrganisationJpaReposito
 import ie.reflexivity.flexer.flexapi.extensions.toGitHubOrganisationJpa
 import ie.reflexivity.flexer.flexapi.logger
 import org.kohsuke.github.GHOrganization
-import org.kohsuke.github.GitHub
 import org.springframework.stereotype.Service
 
 
@@ -15,8 +14,7 @@ interface GitHubOrganisationScraper {
 
 @Service
 class GitHubOrganisationScraperImpl(
-        private val gitHubOrgJpaRepository: GitHubOrganisationJpaRepository,
-        private val gitHub: GitHub
+        private val gitHubOrgJpaRepository: GitHubOrganisationJpaRepository
 ) : GitHubOrganisationScraper {
 
     private val log by logger()
@@ -30,6 +28,5 @@ class GitHubOrganisationScraperImpl(
         }
         gitHubOrgJpaRepository.save(latestOrganisationJpa)
     }
-
 
 }

@@ -2,11 +2,11 @@ package ie.reflexivity.flexer.flexapi.db
 
 import ie.reflexivity.flexer.flexapi.SpringProfiles
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
-import ie.reflexivity.flexer.flexapi.db.domain.UserJpa
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.UserJpaRepository
 import ie.reflexivity.flexer.flexapi.model.ProjectType.ETHERUM
 import ie.reflexivity.flexer.flexapi.model.ProjectType.GOLEM
+import ie.reflexivity.flexer.flexapi.model.ProjectType.IPFS
 import ie.reflexivity.flexer.flexapi.model.ProjectType.TEZOS
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
@@ -23,7 +23,6 @@ class ApplicationEventListener(
 
     @EventListener(ApplicationReadyEvent::class)
     fun applicationStarted() {
-        createUsers()
         createProjectStaticData();
     }
 
@@ -53,8 +52,17 @@ class ApplicationEventListener(
         )
         createProjectIfDoesntExist(golemProject)
 
+
+        val ipfsProject = ProjectJpa(
+                projectType = IPFS,
+                projectHomePage = "https://github.com/ipfs",
+                githubUrl = "https://github.com/ipfs",
+                gitHubOrganisation = "ipfs"
+        )
+        createProjectIfDoesntExist(ipfsProject)
+
 /*
-        val eosProject = ProjectJpa(
+                val eosProject = ProjectJpa(
                 projectType = EOS,
                 projectHomePage = "https://eos.io/",
                 githubUrl = "http://github.com/eosio",
@@ -70,13 +78,6 @@ class ApplicationEventListener(
         )
         createProjectIfDoesntExist(aragonProject)
 
-        val ipfsProject = ProjectJpa(
-                projectType = IPFS,
-                projectHomePage = "https://github.com/ipfs",
-                githubUrl = "https://github.com/ipfs",
-                gitHubOrganisation = "ipfs"
-        )
-        createProjectIfDoesntExist(ipfsProject)
 
         val fileCoinProject = ProjectJpa(
                 projectType = FILE_COIN,
@@ -123,15 +124,5 @@ class ApplicationEventListener(
 
     private fun createProjectIfDoesntExist(projectJpa: ProjectJpa) =
             projectJpaRepository.findOneByProjectType(projectJpa.projectType) ?: projectJpaRepository.save(projectJpa)
-
-
-    @Transactional
-    private fun createUsers() {
-        userJpaRepository.deleteAll() // clean up from previous runs.
-        val user1 = UserJpa(userId = "user1", password = "anyPassword")
-        userJpaRepository.save(user1)
-        val user2 = UserJpa(userId = "user2", password = "anyPassword")
-        userJpaRepository.save(user2)
-    }
 
 }

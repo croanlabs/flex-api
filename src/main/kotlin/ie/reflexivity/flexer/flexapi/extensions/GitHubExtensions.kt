@@ -3,11 +3,14 @@ package ie.reflexivity.flexer.flexapi.extensions
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubOrganisationJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
+import ie.reflexivity.flexer.flexapi.db.domain.UserJpa
+import ie.reflexivity.flexer.flexapi.model.Platform
 import org.kohsuke.github.GHOrganization
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GHUser
 
 
-fun GHOrganization.toGitHubOrganisationJpa(projectJpa : ProjectJpa) =
+fun GHOrganization.toGitHubOrganisationJpa(projectJpa: ProjectJpa) =
         GitHubOrganisationJpa(
                 gitHubId = id,
                 email = email,
@@ -24,7 +27,7 @@ fun GHOrganization.toGitHubOrganisationJpa(projectJpa : ProjectJpa) =
                 projectJpa = projectJpa
         )
 
-fun GHRepository.toGitHubRepositoryJpa(projectJpa : ProjectJpa) =
+fun GHRepository.toGitHubRepositoryJpa(projectJpa: ProjectJpa) =
         GitHubRepositoryJpa(
                 projectJpa = projectJpa,
                 name = name,
@@ -36,3 +39,19 @@ fun GHRepository.toGitHubRepositoryJpa(projectJpa : ProjectJpa) =
                 forksCount = forks,
                 openIssuesCount = openIssueCount
         )
+
+fun GHUser.toUserJpa(platform: Platform) = UserJpa(
+        platform = platform,
+        platformId = id.toString(),
+        platformUserId = login,
+        email = email,
+        location = location,
+        company = company,
+        blog = blog,
+        name = name,
+        created = createdAt?.toLocalDateTime(),
+        gitHubFollowersCount = followersCount,
+        gitHubFollowingCount = followingCount,
+        gitHubPublicGistCount = publicGistCount,
+        gitHubPublicRepoCount = publicRepoCount
+)

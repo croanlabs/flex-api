@@ -8,7 +8,6 @@ import org.kohsuke.github.GHRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.util.StopWatch
 import javax.persistence.EntityManager
 
 
@@ -20,7 +19,6 @@ interface GitHubRepositoryScraper {
 class GitHubRepositoryScraperImpl(
         private val gitHubRepositoryJpaRepository: GitHubRepositoryJpaRepository,
         private val entityManager: EntityManager
-
 ) : GitHubRepositoryScraper {
 
     @Value("\${spring.jpa.properties.hibernate.jdbc.batch_size}")
@@ -35,8 +33,6 @@ class GitHubRepositoryScraperImpl(
     @Transactional
     override fun scrape(repositories: MutableCollection<GHRepository>, projectJpa: ProjectJpa) {
         log.info("About to start scraping repositories for ${projectJpa.projectType} size=${repositories.size}")
-        val stopWatch = StopWatch()
-        stopWatch.start()
         for (i in 0..repositories.size - 1) {
             val latestRepoJpa = repositories.elementAt(i).toGitHubRepositoryJpa(projectJpa)
             val existingRepoJpa = gitHubRepositoryJpaRepository.findByGitHubId(latestRepoJpa.gitHubId)
@@ -49,10 +45,7 @@ class GitHubRepositoryScraperImpl(
                 entityManager.flush();
                 entityManager.clear();
             }
-
         }
-        stopWatch.stop()
-        log.info("Finished scraping repositories for ${projectJpa.projectType} executionTime=${stopWatch.totalTimeSeconds}")
     }
 
 

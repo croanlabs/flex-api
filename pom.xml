@@ -32,6 +32,7 @@
         <postgres.driver.version>9.1-901-1.jdbc4</postgres.driver.version>
         <kosuke.github.version>1.86</kosuke.github.version>
         <javax.inject.version>1</javax.inject.version>
+        <guava.version>23.0</guava.version>
     </properties>
 
     <dependencies>
@@ -70,6 +71,11 @@
             <artifactId>github-api</artifactId>
             <version>${kosuke.github.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
 
         <!-- Database -->
         <dependency>
@@ -89,6 +95,12 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.1.4.jre7</version>
+        </dependency>
+        <!-- Needed for java.time -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-java8</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
 
 
