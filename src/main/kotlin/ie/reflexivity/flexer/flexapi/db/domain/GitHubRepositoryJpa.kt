@@ -1,6 +1,8 @@
 package ie.reflexivity.flexer.flexapi.db.domain
 
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa.Companion.TABLE_NAME
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -44,7 +46,11 @@ data class GitHubRepositoryJpa(
 
         val forksCount: Int = 0,
 
-        val openIssuesCount: Int = 0
+        val openIssuesCount: Int = 0,
+
+        @UpdateTimestamp
+        val lastModified: LocalDateTime = LocalDateTime.now()
+
 
 ) {
     companion object {

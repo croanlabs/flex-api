@@ -155,7 +155,16 @@
     <changeSet author="j_bax (generated)" id="1505334938625-21">
         <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="git_hub_organisation" constraintName="FKobramt1x56vmphir2ukkh4638" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project" />
     </changeSet>
-
+    <changeSet author="j_bax (generated)" id="1505419806458-1">
+        <addColumn tableName="git_hub_repository">
+            <column name="last_modified" type="timestamp" />
+        </addColumn>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505420848476-1">
+        <addColumn tableName="git_hub_organisation">
+            <column name="last_modified" type="timestamp" />
+        </addColumn>
+    </changeSet>
 
     <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql" runAlways="true">
         <sql>
