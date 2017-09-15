@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface GitHubOrganisationJpaRepository : JpaRepository<GitHubOrganisationJpa, Long> {
 
-    fun findByGitHubId(gitHubId: Int) : GitHubOrganisationJpa
+    fun findByGitHubId(gitHubId: Int): GitHubOrganisationJpa?
 
 }

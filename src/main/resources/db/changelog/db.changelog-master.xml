@@ -165,6 +165,29 @@
             <column name="last_modified" type="timestamp" />
         </addColumn>
     </changeSet>
+    <changeSet author="j_bax (generated)" id="1505489270322-1">
+        <createTable tableName="repository_user">
+            <column name="project_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="platform" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="platform_user_id" type="VARCHAR(70)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505489270322-2">
+        <addPrimaryKey columnNames="project_id, platform, platform_user_id" tableName="repository_user" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505489270322-3">
+        <addForeignKeyConstraint baseColumnNames="platform,platform_user_id" baseTableName="repository_user" constraintName="FK1v2qhnd7y3x96om37vvv6jvdl" deferrable="false" initiallyDeferred="false" referencedColumnNames="platform,platform_user_id" referencedTableName="user" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505489270322-4">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="repository_user" constraintName="FKhb7of9k3wqjouyecu39xvgj5e" deferrable="false" initiallyDeferred="false" referencedColumnNames="git_hub_repository_id" referencedTableName="git_hub_repository" />
+    </changeSet>
+
 
     <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql" runAlways="true">
         <sql>

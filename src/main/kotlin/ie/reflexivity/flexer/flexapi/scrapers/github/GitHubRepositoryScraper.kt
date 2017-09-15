@@ -4,7 +4,9 @@ import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubRepositoryJpaRepository
 import ie.reflexivity.flexer.flexapi.extensions.toGitHubRepositoryJpa
 import ie.reflexivity.flexer.flexapi.logger
+import org.kohsuke.github.GHPersonSet
 import org.kohsuke.github.GHRepository
+import org.kohsuke.github.GHUser
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,7 +20,8 @@ interface GitHubRepositoryScraper {
 @Service
 class GitHubRepositoryScraperImpl(
         private val gitHubRepositoryJpaRepository: GitHubRepositoryJpaRepository,
-        private val entityManager: EntityManager
+        private val entityManager: EntityManager,
+        private val gitHubRepositoryCollaboratorsScraper: GitHubRepositoryCollaboratorsScraper
 ) : GitHubRepositoryScraper {
 
     @Value("\${spring.jpa.properties.hibernate.jdbc.batch_size}")
@@ -34,7 +37,8 @@ class GitHubRepositoryScraperImpl(
     override fun scrape(repositories: MutableCollection<GHRepository>, projectJpa: ProjectJpa) {
         log.info("About to start scraping repositories for ${projectJpa.projectType} size=${repositories.size}")
         for (i in 0..repositories.size - 1) {
-            val latestRepoJpa = repositories.elementAt(i).toGitHubRepositoryJpa(projectJpa)
+            val ghRepository = repositories.elementAt(i)
+            val latestRepoJpa = ghRepository.toGitHubRepositoryJpa(projectJpa)
             val existingRepoJpa = gitHubRepositoryJpaRepository.findByGitHubId(latestRepoJpa.gitHubId)
             if (existingRepoJpa == null) {
                 entityManager.persist(latestRepoJpa)
@@ -45,8 +49,17 @@ class GitHubRepositoryScraperImpl(
                 entityManager.flush();
                 entityManager.clear();
             }
+            if (ghRepository.hasPushAccess() && ghRepository.collaborators != null) {
+                scrapeCollaborators(latestRepoJpa.gitHubId, ghRepository.collaborators)
+            }
         }
     }
 
+    private fun scrapeCollaborators(id: Int, collaborators: GHPersonSet<GHUser>) {
+        val existingRepoJpa = gitHubRepositoryJpaRepository.findByGitHubId(id)
+        gitHubRepositoryCollaboratorsScraper.scrape(
+                collaborators = collaborators.toList(),
+                repositoryJpa = existingRepoJpa)
+    }
 
 }

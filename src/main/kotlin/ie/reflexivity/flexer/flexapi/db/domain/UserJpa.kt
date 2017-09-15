@@ -30,6 +30,9 @@ data class UserJpa(
         @ManyToMany(mappedBy = "users")
         val projects: MutableSet<ProjectJpa>? = mutableSetOf(),
 
+        @ManyToMany(mappedBy = "collaborators")
+        val gitHubRepositories: MutableSet<GitHubRepositoryJpa>? = mutableSetOf(),
+
         val platformId: String? = null,
 
         val email: String? = null,
@@ -98,10 +101,8 @@ data class UserJpa(
                 .add("gitHubPublicGistCount", gitHubPublicGistCount)
                 .add("gitHubPublicRepoCount", gitHubPublicRepoCount)
                 .add("name", name)
-
                 .toString()
     }
-
 }
 
 data class UserId(

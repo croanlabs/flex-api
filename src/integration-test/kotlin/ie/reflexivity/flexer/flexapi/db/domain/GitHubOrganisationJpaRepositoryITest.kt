@@ -3,10 +3,10 @@ package ie.reflexivity.flexer.flexapi.db.domain
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubOrganisationJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
 import ie.reflexivity.flexer.flexapi.test.infrastructure.testInstance
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.test.context.junit4.SpringRunner
-import org.assertj.core.api.Assertions.*
 import javax.inject.Inject
 
 
@@ -14,11 +14,11 @@ import javax.inject.Inject
 @RunWith(SpringRunner::class)
 class GitHubOrganisationJpaRepositoryITest {
 
-    @Inject private lateinit var  gitHubOrganisationJpaRepository : GitHubOrganisationJpaRepository
-    @Inject private lateinit var  projectJpaRepository : ProjectJpaRepository
+    @Inject private lateinit var gitHubOrganisationJpaRepository: GitHubOrganisationJpaRepository
+    @Inject private lateinit var projectJpaRepository: ProjectJpaRepository
 
     @Test
-    fun `Given a new github organisation When saving to an existing project Then the organisation should be saved`(){
+    fun `Given a new github organisation When saving to an existing project Then the organisation should be saved`() {
         val projectJpa = createProject()
         val gitHubOrganisationJpa = GitHubOrganisationJpa.testInstance(projectJpa = projectJpa)
 
@@ -29,7 +29,7 @@ class GitHubOrganisationJpaRepositoryITest {
     }
 
     @Test
-    fun `Given a saved organisation When searching by gitHubId that exists Then the github organisation should be returned`(){
+    fun `Given a saved organisation When searching by gitHubId that exists Then the github organisation should be returned`() {
         val projectJpa = createProject()
         val gitHubId = 12
         createGitHubOrganisation(projectJpa, gitHubId)
@@ -37,7 +37,7 @@ class GitHubOrganisationJpaRepositoryITest {
         val result = gitHubOrganisationJpaRepository.findByGitHubId(gitHubId)
 
         assertThat(result).isNotNull()
-        assertThat(result.gitHubId).isEqualTo(gitHubId)
+        assertThat(result?.gitHubId).isEqualTo(gitHubId)
     }
 
     private fun createGitHubOrganisation(projectJpa: ProjectJpa, gitHubId: Int) {

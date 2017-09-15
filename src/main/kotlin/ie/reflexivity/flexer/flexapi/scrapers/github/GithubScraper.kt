@@ -58,9 +58,9 @@ class GitHubScraperImpl(
         scrapeMembers(organisation.listPublicMembers(), projectJpa)
     }
 
-    private fun scrapeMembers(listMembers: PagedIterable<GHUser>, projectJpa: ProjectJpa) {
-        gitHubMembersScraper.scrape(listMembers, projectJpa)
-    }
+    private fun scrapeMembers(listMembers: PagedIterable<GHUser>, projectJpa: ProjectJpa) =
+            gitHubMembersScraper.scrape(listMembers, projectJpa)
+
 
     private fun scrapeOrganisationRepositories(organisation: GHOrganization, projectJpa: ProjectJpa) {
         val repositories = organisation.repositories.values

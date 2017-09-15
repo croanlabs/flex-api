@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 
 
 interface GitHubOrganisationScraper {
-    fun scrape(organisation: GHOrganization, it: ProjectJpa)
+    fun scrape(ghOrganisation: GHOrganization, projectJpa: ProjectJpa)
 }
 
 @Service

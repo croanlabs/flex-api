@@ -3,14 +3,18 @@ package ie.reflexivity.flexer.flexapi.db.domain
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa.Companion.TABLE_NAME
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
+import javax.persistence.CascadeType.ALL
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
+import javax.persistence.FetchType.EAGER
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType.SEQUENCE
 import javax.persistence.Id
 import javax.persistence.Index
 import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
 import javax.persistence.ManyToOne
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
@@ -30,6 +34,12 @@ data class GitHubRepositoryJpa(
         @JoinColumn(name = ProjectJpa.ID_NAME)
         @ManyToOne(optional = false, fetch = FetchType.LAZY)
         val projectJpa: ProjectJpa,
+
+        @ManyToMany(cascade = arrayOf(ALL), fetch = EAGER)
+        @JoinTable(name = "REPOSITORY_USER", joinColumns = arrayOf(JoinColumn(name = ProjectJpa.ID_NAME)),
+                inverseJoinColumns = arrayOf(JoinColumn(name = "platformUserId", referencedColumnName = "platformUserId"),
+                        JoinColumn(name = "platform", referencedColumnName = "platform")))
+        val collaborators: MutableSet<UserJpa> = mutableSetOf(),
 
         @Column(unique = true)
         val gitHubId: Int,
