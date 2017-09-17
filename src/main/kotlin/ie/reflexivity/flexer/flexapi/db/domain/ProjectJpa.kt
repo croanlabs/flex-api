@@ -4,6 +4,8 @@ import com.google.common.base.MoreObjects
 import com.google.common.base.Objects
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa.Companion.TABLE_NAME
 import ie.reflexivity.flexer.flexapi.model.ProjectType
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 import javax.persistence.CascadeType.ALL
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -16,6 +18,7 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
+import javax.persistence.OneToMany
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 
@@ -29,6 +32,15 @@ data class ProjectJpa(
         @Column(name = ID_NAME, updatable = false, nullable = false)
         val id: Long = 0,
 
+        @ManyToMany(cascade = arrayOf(ALL), fetch = EAGER)
+        @JoinTable(name = "PROJECT_USER", joinColumns = arrayOf(JoinColumn(name = ID_NAME)),
+                inverseJoinColumns = arrayOf(JoinColumn(name = "platformUserId", referencedColumnName = "platformUserId"),
+                        JoinColumn(name = "platform", referencedColumnName = "platform")))
+        val users: MutableSet<UserJpa>? = mutableSetOf(),
+
+        @OneToMany(mappedBy = "project")
+        val repositories: MutableSet<GitHubRepositoryJpa> = mutableSetOf(),
+
         @Enumerated(EnumType.STRING)
         @Column(unique = true, nullable = false)
         val projectType: ProjectType,
@@ -41,11 +53,8 @@ data class ProjectJpa(
 
         val gitHubRepository: String? = null,
 
-        @ManyToMany(cascade = arrayOf(ALL), fetch = EAGER)
-        @JoinTable(name = "PROJECT_USER", joinColumns = arrayOf(JoinColumn(name = ID_NAME)),
-                inverseJoinColumns = arrayOf(JoinColumn(name = "platformUserId", referencedColumnName = "platformUserId"),
-                        JoinColumn(name = "platform", referencedColumnName = "platform")))
-        val users: MutableSet<UserJpa>? = mutableSetOf()
+        @UpdateTimestamp
+        val lastModified: LocalDateTime = LocalDateTime.now()
 
 ) {
     companion object {
@@ -84,6 +93,7 @@ data class ProjectJpa(
                 .add("githubUrl", githubUrl)
                 .add("gitHubOrganisation", gitHubOrganisation)
                 .add("gitHubRepository", gitHubRepository)
+                .add("lastModified", lastModified)
                 .toString()
     }
 }

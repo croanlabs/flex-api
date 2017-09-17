@@ -14,6 +14,7 @@ import javax.persistence.Enumerated
 import javax.persistence.Id
 import javax.persistence.IdClass
 import javax.persistence.ManyToMany
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
@@ -32,6 +33,12 @@ data class UserJpa(
 
         @ManyToMany(mappedBy = "collaborators")
         val gitHubRepositories: MutableSet<GitHubRepositoryJpa>? = mutableSetOf(),
+
+        @OneToMany(mappedBy = "author")
+        val authoredCommits: MutableSet<GitHubCommitJpa>? = mutableSetOf(),
+
+        @OneToMany(mappedBy = "committer")
+        val committedCommits: MutableSet<GitHubCommitJpa>? = mutableSetOf(),
 
         val platformId: String? = null,
 

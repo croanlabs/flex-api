@@ -6,8 +6,8 @@ import ie.reflexivity.flexer.flexapi.FlexIntegrationTest
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.domain.UserJpa
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
-import ie.reflexivity.flexer.flexapi.extensions.toDate
 import ie.reflexivity.flexer.flexapi.test.infrastructure.testInstance
+import ie.reflexivity.flexer.flexapi.test.infrastructure.toMockedGHUser
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -55,20 +55,7 @@ class GitHubMembersScraperImplITest {
     }
 
     private fun createPageable(userJpa: UserJpa): PagedIterable<GHUser> {
-        val user = mock<GHUser>()
-        userJpa.run {
-            whenever(user.email).thenReturn(email)
-            whenever(user.location).thenReturn(location)
-            whenever(user.blog).thenReturn(blog)
-            whenever(user.company).thenReturn(company)
-            whenever(user.followersCount).thenReturn(gitHubFollowersCount)
-            whenever(user.followingCount).thenReturn(gitHubFollowingCount)
-            whenever(user.id).thenReturn(platformId!!.toInt())
-            whenever(user.createdAt).thenReturn(created?.toDate())
-            whenever(user.login).thenReturn(platformUserId)
-            whenever(user.name).thenReturn(name)
-            whenever(user.id).thenReturn(platformId?.toInt())
-        }
+        val user = userJpa.toMockedGHUser()
         val pageableIterator = mock<PagedIterable<GHUser>>()
         val pagedIterator = mock<PagedIterator<GHUser>>()
         whenever(pagedIterator.next()).thenReturn(user)

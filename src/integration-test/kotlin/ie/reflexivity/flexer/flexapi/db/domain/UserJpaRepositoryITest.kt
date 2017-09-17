@@ -40,7 +40,16 @@ class UserJpaRepositoryITest {
 
         val reloadedProject = projectJpaRepository.findOne(projectJpa.id)
         assertThat(reloadedProject.users?.size).isEqualTo(2)
+    }
 
+    @Test
+    fun `Given an existing user When searching by user Id and platform Then we expect the user to be returned`() {
+        val savedUser = userJpaRepository.save(UserJpa.testInstance())
+
+        val result = userJpaRepository.findByPlatformUserIdAndPlatform(savedUser.platformUserId, savedUser.platform)
+
+        assertThat(result).isNotNull()
+        assertThat(result).isEqualTo(result)
     }
 
     private fun createProjectWithUser(): ProjectJpa {

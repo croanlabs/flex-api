@@ -1,5 +1,6 @@
 package ie.reflexivity.flexer.flexapi.test.infrastructure
 
+import ie.reflexivity.flexer.flexapi.db.domain.GitHubCommitJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubOrganisationJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
@@ -49,7 +50,7 @@ fun UserJpa.Companion.testInstance() =
 
 fun GitHubRepositoryJpa.Companion.testIntance(projectJpa: ProjectJpa = ProjectJpa.testInstance()) =
         GitHubRepositoryJpa(
-                projectJpa = projectJpa,
+                project = projectJpa,
                 gitHubId = 10,
                 language = "anyLanguage",
                 name = "anyName",
@@ -59,3 +60,12 @@ fun GitHubRepositoryJpa.Companion.testIntance(projectJpa: ProjectJpa = ProjectJp
                 forksCount = 10,
                 openIssuesCount = 100
         )
+
+fun GitHubCommitJpa.Companion.testInstance(gitHubRepositoryJpa: GitHubRepositoryJpa) = GitHubCommitJpa(
+        author = UserJpa.testInstance(),
+        committer = UserJpa.testInstance(),
+        repository = gitHubRepositoryJpa,
+        shaId = "anyShaId",
+        authorDate = LocalDateTime.now(),
+        commitDate = LocalDateTime.now()
+)

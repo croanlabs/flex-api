@@ -26,7 +26,7 @@ class GitHubRepositoryScraperImplITest {
 
     @Inject lateinit var projectJpaRepository: ProjectJpaRepository
     @Inject lateinit var gitHubRepoJpaRepository: GitHubRepositoryJpaRepository
-    @Inject lateinit var gitHubRepositoryScraper: GitHubRepositoryScraper
+    @Inject lateinit var testee: GitHubRepositoryScraper
 
     private val NUMBER_OF_REPOS = 1_000
     private val MODULUS = 25
@@ -36,7 +36,7 @@ class GitHubRepositoryScraperImplITest {
         val projectJpa = projectJpaRepository.save(ProjectJpa.testInstance())
         val ghRepositories = createGHRepostories()
 
-        gitHubRepositoryScraper.scrape(repositories = ghRepositories, projectJpa = projectJpa)
+        testee.scrape(repositories = ghRepositories, projectJpa = projectJpa)
 
         val size = gitHubRepoJpaRepository.findAll().count()
         assertThat(size).isEqualTo(ghRepositories.size)
@@ -47,7 +47,7 @@ class GitHubRepositoryScraperImplITest {
         val projectJpa = projectJpaRepository.save(ProjectJpa.testInstance())
         val ghRepositories = createAndSaveRandomlyGHRepostories(projectJpa)
 
-        gitHubRepositoryScraper.scrape(repositories = ghRepositories, projectJpa = projectJpa)
+        testee.scrape(repositories = ghRepositories, projectJpa = projectJpa)
 
         val size = gitHubRepoJpaRepository.findAll().count()
         assertThat(size).isEqualTo(ghRepositories.size)

@@ -1,5 +1,6 @@
 package ie.reflexivity.flexer.flexapi.scrapers.github
 
+import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubRepositoryJpaRepository
 import ie.reflexivity.flexer.flexapi.extensions.toGitHubRepositoryJpa
@@ -21,7 +22,8 @@ interface GitHubRepositoryScraper {
 class GitHubRepositoryScraperImpl(
         private val gitHubRepositoryJpaRepository: GitHubRepositoryJpaRepository,
         private val entityManager: EntityManager,
-        private val gitHubRepositoryCollaboratorsScraper: GitHubRepositoryCollaboratorsScraper
+        private val gitHubRepositoryCollaboratorsScraper: GitHubRepositoryCollaboratorsScraper,
+        private val gitHubRepositoryCommitsScraper: GitHubRepositoryCommitsScraper
 ) : GitHubRepositoryScraper {
 
     @Value("\${spring.jpa.properties.hibernate.jdbc.batch_size}")
@@ -52,7 +54,16 @@ class GitHubRepositoryScraperImpl(
             if (ghRepository.hasPushAccess() && ghRepository.collaborators != null) {
                 scrapeCollaborators(latestRepoJpa.gitHubId, ghRepository.collaborators)
             }
+            val savedRepository = gitHubRepositoryJpaRepository.findByGitHubId(latestRepoJpa.gitHubId)
+            scrapeCommits(ghRepository, savedRepository)
         }
+    }
+
+    private fun scrapeCommits(ghRepository: GHRepository, repositoryJpa: GitHubRepositoryJpa) {
+        //TODO use the query commits so we dont suck in all commits every time. see Since!
+        //ghRepository.queryCommits()
+        val commitsPageable = ghRepository.listCommits()
+        gitHubRepositoryCommitsScraper.scrape(commitsPageable, repositoryJpa)
     }
 
     private fun scrapeCollaborators(id: Int, collaborators: GHPersonSet<GHUser>) {

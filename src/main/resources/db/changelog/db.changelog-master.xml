@@ -3,16 +3,19 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet author="j_bax (generated)" id="1505334938625-1">
+    <changeSet author="j_bax (generated)" id="1505673155975-1">
         <createSequence sequenceName="git_hub_organisation_sequence" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-2">
+    <changeSet author="j_bax (generated)" id="1505673155975-2">
         <createSequence sequenceName="git_hub_repository_sequence" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-3">
+    <changeSet author="j_bax (generated)" id="1505673155975-3">
+        <createSequence sequenceName="github_commit_sequence" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-4">
         <createSequence sequenceName="project_sequence" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-4">
+    <changeSet author="j_bax (generated)" id="1505673155975-5">
         <createTable tableName="git_hub_organisation">
             <column name="git_hub_organisation_id" type="BIGINT">
                 <constraints nullable="false" />
@@ -24,6 +27,7 @@
             <column name="following" type="INT" />
             <column name="git_hub_id" type="INT" />
             <column name="html_url" type="VARCHAR(255)" />
+            <column name="last_modified" type="TIMESTAMP" />
             <column name="location" type="VARCHAR(255)" />
             <column name="no_of_followers" type="INT" />
             <column name="no_of_public_gists" type="INT" />
@@ -34,7 +38,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-5">
+    <changeSet author="j_bax (generated)" id="1505673155975-6">
         <createTable tableName="git_hub_repository">
             <column name="git_hub_repository_id" type="BIGINT">
                 <constraints nullable="false" />
@@ -44,6 +48,7 @@
             </column>
             <column name="git_hub_id" type="INT" />
             <column name="language" type="VARCHAR(255)" />
+            <column name="last_modified" type="TIMESTAMP" />
             <column name="name" type="VARCHAR(255)" />
             <column name="open_issues_count" type="INT">
                 <constraints nullable="false" />
@@ -60,7 +65,23 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-6">
+    <changeSet author="j_bax (generated)" id="1505673155975-7">
+        <createTable tableName="github_commit">
+            <column name="github_commit_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="author_date" type="TIMESTAMP" />
+            <column name="commit_date" type="TIMESTAMP" />
+            <column name="last_modified" type="TIMESTAMP" />
+            <column name="sha_id" type="VARCHAR(255)" />
+            <column name="author_platform" type="VARCHAR(255)" />
+            <column name="author_id" type="VARCHAR(70)" />
+            <column name="committer_platform" type="VARCHAR(255)" />
+            <column name="committer_id" type="VARCHAR(70)" />
+            <column name="repository_id" type="BIGINT" />
+        </createTable>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-8">
         <createTable tableName="project">
             <column name="project_id" type="BIGINT">
                 <constraints nullable="false" />
@@ -68,13 +89,14 @@
             <column name="git_hub_organisation" type="VARCHAR(255)" />
             <column name="git_hub_repository" type="VARCHAR(255)" />
             <column name="github_url" type="VARCHAR(255)" />
+            <column name="last_modified" type="TIMESTAMP" />
             <column name="project_home_page" type="VARCHAR(255)" />
             <column name="project_type" type="VARCHAR(255)">
                 <constraints nullable="false" />
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-7">
+    <changeSet author="j_bax (generated)" id="1505673155975-9">
         <createTable tableName="project_user">
             <column name="project_id" type="BIGINT">
                 <constraints nullable="false" />
@@ -87,7 +109,20 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-8">
+    <changeSet author="j_bax (generated)" id="1505673155975-10">
+        <createTable tableName="repository_user">
+            <column name="project_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="platform" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="platform_user_id" type="VARCHAR(70)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-11">
         <createTable tableName="user">
             <column name="platform" type="VARCHAR(255)">
                 <constraints nullable="false" />
@@ -116,78 +151,66 @@
             <column name="platform_id" type="VARCHAR(255)" />
         </createTable>
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-9">
+    <changeSet author="j_bax (generated)" id="1505673155975-12">
         <addPrimaryKey columnNames="project_id, platform, platform_user_id" tableName="project_user" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-10">
-        <addPrimaryKey columnNames="git_hub_organisation_id" constraintName="git_hub_organisationPK" tableName="git_hub_organisation" />
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-11">
-        <addPrimaryKey columnNames="git_hub_repository_id" constraintName="git_hub_repositoryPK" tableName="git_hub_repository" />
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-12">
-        <addPrimaryKey columnNames="project_id" constraintName="projectPK" tableName="project" />
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-13">
-        <addPrimaryKey columnNames="platform, platform_user_id" constraintName="userPK" tableName="user" />
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-14">
-        <addUniqueConstraint columnNames="git_hub_id" constraintName="UC_GIT_HUB_ORGANISATIONGIT_HUB_ID_COL" tableName="git_hub_organisation" />
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-15">
-        <addUniqueConstraint columnNames="git_hub_id" constraintName="UC_GIT_HUB_REPOSITORYGIT_HUB_ID_COL" tableName="git_hub_repository" />
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-16">
-        <addUniqueConstraint columnNames="project_type" constraintName="UC_PROJECTPROJECT_TYPE_COL" tableName="project" />
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-17">
-        <addUniqueConstraint columnNames="project_id" constraintName="UK_pfkdv6r0nogj6rqxw1tle6kea" tableName="git_hub_organisation" />
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-18">
-        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="git_hub_repository" constraintName="FK4eps1hroxk5j1wtpoxy4blgrk" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project" />
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-19">
-        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="project_user" constraintName="FK4ug72llnm0n7yafwntgdswl3y" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project" />
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-20">
-        <addForeignKeyConstraint baseColumnNames="platform,platform_user_id" baseTableName="project_user" constraintName="FKc8xmbnet89i51symha4as9q1r" deferrable="false" initiallyDeferred="false" referencedColumnNames="platform,platform_user_id" referencedTableName="user" />
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505334938625-21">
-        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="git_hub_organisation" constraintName="FKobramt1x56vmphir2ukkh4638" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project" />
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505419806458-1">
-        <addColumn tableName="git_hub_repository">
-            <column name="last_modified" type="timestamp" />
-        </addColumn>
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505420848476-1">
-        <addColumn tableName="git_hub_organisation">
-            <column name="last_modified" type="timestamp" />
-        </addColumn>
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505489270322-1">
-        <createTable tableName="repository_user">
-            <column name="project_id" type="BIGINT">
-                <constraints nullable="false" />
-            </column>
-            <column name="platform" type="VARCHAR(255)">
-                <constraints nullable="false" />
-            </column>
-            <column name="platform_user_id" type="VARCHAR(70)">
-                <constraints nullable="false" />
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="j_bax (generated)" id="1505489270322-2">
+    <changeSet author="j_bax (generated)" id="1505673155975-13">
         <addPrimaryKey columnNames="project_id, platform, platform_user_id" tableName="repository_user" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1505489270322-3">
+    <changeSet author="j_bax (generated)" id="1505673155975-14">
+        <addPrimaryKey columnNames="git_hub_organisation_id" constraintName="git_hub_organisationPK" tableName="git_hub_organisation" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-15">
+        <addPrimaryKey columnNames="git_hub_repository_id" constraintName="git_hub_repositoryPK" tableName="git_hub_repository" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-16">
+        <addPrimaryKey columnNames="github_commit_id" constraintName="github_commitPK" tableName="github_commit" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-17">
+        <addPrimaryKey columnNames="project_id" constraintName="projectPK" tableName="project" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-18">
+        <addPrimaryKey columnNames="platform, platform_user_id" constraintName="userPK" tableName="user" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-19">
+        <addUniqueConstraint columnNames="git_hub_id" constraintName="UC_GIT_HUB_ORGANISATIONGIT_HUB_ID_COL" tableName="git_hub_organisation" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-20">
+        <addUniqueConstraint columnNames="git_hub_id" constraintName="UC_GIT_HUB_REPOSITORYGIT_HUB_ID_COL" tableName="git_hub_repository" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-21">
+        <addUniqueConstraint columnNames="project_type" constraintName="UC_PROJECTPROJECT_TYPE_COL" tableName="project" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-22">
+        <addUniqueConstraint columnNames="project_id" constraintName="UK_pfkdv6r0nogj6rqxw1tle6kea" tableName="git_hub_organisation" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-23">
         <addForeignKeyConstraint baseColumnNames="platform,platform_user_id" baseTableName="repository_user" constraintName="FK1v2qhnd7y3x96om37vvv6jvdl" deferrable="false" initiallyDeferred="false" referencedColumnNames="platform,platform_user_id" referencedTableName="user" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1505489270322-4">
+    <changeSet author="j_bax (generated)" id="1505673155975-24">
+        <addForeignKeyConstraint baseColumnNames="repository_id" baseTableName="github_commit" constraintName="FK2tudb2v8t4owes43cnbq5mmp6" deferrable="false" initiallyDeferred="false" referencedColumnNames="git_hub_repository_id" referencedTableName="git_hub_repository" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-25">
+        <addForeignKeyConstraint baseColumnNames="author_platform,author_id" baseTableName="github_commit" constraintName="FK3oslnm4l8kdx182vfkougttes" deferrable="false" initiallyDeferred="false" referencedColumnNames="platform,platform_user_id" referencedTableName="user" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-26">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="git_hub_repository" constraintName="FK4eps1hroxk5j1wtpoxy4blgrk" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-27">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="project_user" constraintName="FK4ug72llnm0n7yafwntgdswl3y" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-28">
+        <addForeignKeyConstraint baseColumnNames="platform,platform_user_id" baseTableName="project_user" constraintName="FKc8xmbnet89i51symha4as9q1r" deferrable="false" initiallyDeferred="false" referencedColumnNames="platform,platform_user_id" referencedTableName="user" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-29">
+        <addForeignKeyConstraint baseColumnNames="committer_platform,committer_id" baseTableName="github_commit" constraintName="FKfj673brm1ye9ct2a81dipm4xn" deferrable="false" initiallyDeferred="false" referencedColumnNames="platform,platform_user_id" referencedTableName="user" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1505673155975-30">
         <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="repository_user" constraintName="FKhb7of9k3wqjouyecu39xvgj5e" deferrable="false" initiallyDeferred="false" referencedColumnNames="git_hub_repository_id" referencedTableName="git_hub_repository" />
     </changeSet>
-
+    <changeSet author="j_bax (generated)" id="1505673155975-31">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="git_hub_organisation" constraintName="FKobramt1x56vmphir2ukkh4638" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project" />
+    </changeSet>
 
     <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql" runAlways="true">
         <sql>

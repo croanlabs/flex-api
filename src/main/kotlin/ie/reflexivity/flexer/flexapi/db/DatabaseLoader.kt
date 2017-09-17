@@ -4,7 +4,6 @@ import ie.reflexivity.flexer.flexapi.SpringProfiles
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.UserJpaRepository
-import ie.reflexivity.flexer.flexapi.model.ProjectType.ETHERUM
 import ie.reflexivity.flexer.flexapi.model.ProjectType.GOLEM
 import ie.reflexivity.flexer.flexapi.model.ProjectType.IPFS
 import ie.reflexivity.flexer.flexapi.model.ProjectType.TEZOS
@@ -29,13 +28,6 @@ class ApplicationEventListener(
 
     @Transactional
     private fun createProjectStaticData() {
-        val etherumProject = ProjectJpa(
-                projectType = ETHERUM,
-                projectHomePage = "https://ethereum.org/",
-                githubUrl = "https://github.com/ethereum/",
-                gitHubOrganisation = "ethereum"
-        )
-        createProjectIfDoesntExist(etherumProject)
         val tezusProject = ProjectJpa(
                 projectType = TEZOS,
                 projectHomePage = "https://www.tezos.com/",
@@ -62,6 +54,15 @@ class ApplicationEventListener(
         createProjectIfDoesntExist(ipfsProject)
 
 /*
+val etherumProject = ProjectJpa(
+                projectType = ETHERUM,
+                projectHomePage = "https://ethereum.org/",
+                githubUrl = "https://github.com/ethereum/",
+                gitHubOrganisation = "ethereum"
+        )
+        createProjectIfDoesntExist(etherumProject)
+
+
                 val eosProject = ProjectJpa(
                 projectType = EOS,
                 projectHomePage = "https://eos.io/",
