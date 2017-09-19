@@ -44,7 +44,7 @@ class GitHubRepositoryCommitsScraperImpl(
                 log.trace("Scraping commit ${commit.shA1}")
                 if (commit.author == null || commit.committer == null) {
                     //TODO why? When checking call from API i see commiter, speed issue?
-                    log.warn("No author or committer set. ${commit.shA1} ${commit.htmlUrl} ")
+                    log.warn("$count No author or committer set. ${commit.shA1} ${commit.htmlUrl} ")
                     continue
                 }
                 createUserIfNeeded(commit.author)
@@ -57,6 +57,7 @@ class GitHubRepositoryCommitsScraperImpl(
             }
         } catch (e: Error) {
             //Client Lib throws an error :-(. Happens when repo is empty, 409 returned from API.
+            //FIXME should mark the repo as invalid on our side -> AD-18
             log.error("problem scraping commits for ${githubRepository.name}", e)
         }
         log.debug("Added $count new commits")
