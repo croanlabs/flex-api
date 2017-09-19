@@ -35,9 +35,9 @@ class GitHubRepositoryCommitsScraperImpl(
     override fun scrape(commitsIterable: PagedIterable<GHCommit>, githubRepository: GitHubRepositoryJpa) {
         log.debug("About to scrape commits for ${githubRepository.name}")
         gitHub.printRateDetails()
+        var count = 0
         try {
             val commitsIterator = commitsIterable.iterator()
-            var count = 0
             while (commitsIterator.hasNext()) {
                 count++
                 val commit = commitsIterator.next()
@@ -59,11 +59,11 @@ class GitHubRepositoryCommitsScraperImpl(
             //Client Lib throws an error :-(. Happens when repo is empty, 409 returned from API.
             log.error("problem scraping commits for ${githubRepository.name}", e)
         }
+        log.debug("Added $count new commits")
     }
 
     private fun createUserIfNeeded(user: GHUser) =
             userJpaRepository.findByPlatformUserIdAndPlatform(user.login, GIT_HUB) ?:
                     userJpaRepository.saveAndFlush(user.toUserJpa(GIT_HUB))
-
 
 }

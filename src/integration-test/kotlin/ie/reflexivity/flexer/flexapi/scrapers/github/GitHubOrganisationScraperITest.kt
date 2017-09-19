@@ -55,7 +55,7 @@ class GitHubOrganisationScraperITest {
 
         val organisations = gitHubOrganisationRepository.findAll()
         assertThat(organisations.size).isEqualTo(1)
-        assertThat(organisations[0]).isEqualTo(expectedResult)
+        assertThat(organisations[0]).isEqualTo(expectedResult.copy(lastModified = organisations[0].lastModified))
     }
 
     private fun createAndSaveProject() =

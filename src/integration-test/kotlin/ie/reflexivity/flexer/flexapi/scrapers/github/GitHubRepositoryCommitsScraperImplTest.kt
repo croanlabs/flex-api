@@ -6,7 +6,6 @@ import ie.reflexivity.flexer.flexapi.FlexIntegrationTest
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubCommitJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
-import ie.reflexivity.flexer.flexapi.db.domain.UserJpa
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubCommitJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubRepositoryJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
@@ -37,7 +36,6 @@ class GitHubRepositoryCommitsScraperImplTest {
     @Test
     fun `Given a pageable commits When scraping the commits Then the commits should be saved`() {
         val repositoryJpa = createProjectWithRepository()
-        val userJpa = userJpaRepository.save(UserJpa.testInstance())
         val pageableCommits = createPageable(GitHubCommitJpa.testInstance(repositoryJpa))
 
         testee.scrape(pageableCommits, repositoryJpa)

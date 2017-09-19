@@ -4,9 +4,7 @@ import ie.reflexivity.flexer.flexapi.SpringProfiles
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.UserJpaRepository
-import ie.reflexivity.flexer.flexapi.model.ProjectType.GOLEM
-import ie.reflexivity.flexer.flexapi.model.ProjectType.IPFS
-import ie.reflexivity.flexer.flexapi.model.ProjectType.TEZOS
+import ie.reflexivity.flexer.flexapi.model.ProjectType.MELON_PORT
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
@@ -28,23 +26,33 @@ class ApplicationEventListener(
 
     @Transactional
     private fun createProjectStaticData() {
-        val tezusProject = ProjectJpa(
-                projectType = TEZOS,
-                projectHomePage = "https://www.tezos.com/",
-                githubUrl = "https://github.com/tezos/tezos",
-                gitHubRepository = "tezos/tezos"
+
+        val melonPort = ProjectJpa(
+                projectType = MELON_PORT,
+                projectHomePage = "https@ //github.com/melonproject",
+                githubUrl = "https://github.com/melonproject",
+                gitHubOrganisation = "melonproject"
         )
-        createProjectIfDoesntExist(tezusProject)
+        createProjectIfDoesntExist(melonPort)
 
-        val golemProject = ProjectJpa(
-                projectType = GOLEM,
-                projectHomePage = "https://golem.network/",
-                githubUrl = "https://github.com/golemfactory/golem",
-                gitHubRepository = "golemfactory/golem"
-        )
-        createProjectIfDoesntExist(golemProject)
+//        val tezusProject = ProjectJpa(
+//                projectType = TEZOS,
+//                projectHomePage = "https://www.tezos.com/",
+//                githubUrl = "https://github.com/tezos/tezos",
+//                gitHubRepository = "tezos/tezos"
+//        )
+//        createProjectIfDoesntExist(tezusProject)
+//
+//        val golemProject = ProjectJpa(
+//                projectType = GOLEM,
+//                projectHomePage = "https://golem.network/",
+//                githubUrl = "https://github.com/golemfactory/golem",
+//                gitHubRepository = "golemfactory/golem"
+//        )
+//        createProjectIfDoesntExist(golemProject)
 
 
+/*
         val ipfsProject = ProjectJpa(
                 projectType = IPFS,
                 projectHomePage = "https://github.com/ipfs",
@@ -53,7 +61,6 @@ class ApplicationEventListener(
         )
         createProjectIfDoesntExist(ipfsProject)
 
-/*
 val etherumProject = ProjectJpa(
                 projectType = ETHERUM,
                 projectHomePage = "https://ethereum.org/",

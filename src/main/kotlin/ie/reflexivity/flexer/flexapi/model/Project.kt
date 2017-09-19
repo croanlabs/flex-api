@@ -3,7 +3,7 @@ package ie.reflexivity.flexer.flexapi.model
 
 data class Project(
         val projectType: ProjectType,
-        val projectHomePage : String
+        val projectHomePage: String
 )
 
 enum class ProjectType {
@@ -17,7 +17,8 @@ enum class ProjectType {
     HUMANIG,
     FILE_COIN,
     IPFS,
-    ARAGON
+    ARAGON,
+    MELON_PORT
 }
 
 

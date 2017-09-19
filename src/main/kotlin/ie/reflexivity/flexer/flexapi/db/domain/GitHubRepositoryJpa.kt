@@ -65,11 +65,20 @@ data class GitHubRepositoryJpa(
         @UpdateTimestamp
         val lastModified: LocalDateTime = LocalDateTime.now()
 
-
 ) {
     companion object {
         internal const val TABLE_NAME = "git_hub_repository"
         internal const val ID_NAME = TABLE_NAME + ID_SUFFIX
         private const val SEQUENCE_NAME = TABLE_NAME + SEQUENCE_SUFFIX
     }
+
+    override fun toString(): String {
+        return "GitHubRepositoryJpa(id=$id, project=$project," +
+                "gitHubId=$gitHubId, name='$name', " +
+                "language=$language, ownerName='$ownerName', starGazersCount=$starGazersCount, " +
+                "watchersCount=$watchersCount, forksCount=$forksCount, " +
+                "openIssuesCount=$openIssuesCount, lastModified=$lastModified)"
+    }
+
+
 }

@@ -36,7 +36,7 @@ class GitHubRepositoryJpaRepositoryITest {
         val result = gitHubRepoRepository.findByGitHubId(existingRepositoryJpa.gitHubId)
 
         assertThat(result).isNotNull()
-        assertThat(result.id).isNotNull()
+        assertThat(result!!.id).isNotNull()
     }
 
     private fun createGitHubRepository(): GitHubRepositoryJpa {
