@@ -69,8 +69,8 @@ class GitHubRepositoryScraperImpl(
     }
 
     private fun scrapeCollaborators(id: Int, collaborators: GHPersonSet<GHUser>) {
-        val existingRepoJpa = gitHubRepositoryJpaRepository.findByGitHubId(id) ?: throw
-            NotFoundException("Fail to find repository with github id $id")
+        val existingRepoJpa = gitHubRepositoryJpaRepository.findByGitHubId(id) ?: throw NotFoundException(
+                "Fail to find repository with github id $id")
         gitHubRepositoryCollaboratorsScraper.scrape(
                 collaborators = collaborators.toList(),
                 repositoryJpa = existingRepoJpa)
