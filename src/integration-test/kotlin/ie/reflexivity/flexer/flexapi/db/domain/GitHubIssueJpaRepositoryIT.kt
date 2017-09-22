@@ -28,8 +28,7 @@ class GitHubIssueJpaRepositoryIT {
         val result = testee.save(GitHubIssueJpa.testInstance(repoJpa, userJpa))
 
         assertThat(result).isNotNull()
-        val reloadedRepoJpa = gitHubRepositoryJpaRepository.findOne(repoJpa.id)
-        assertThat(reloadedRepoJpa.issues.size).isEqualTo(1)
+        assertThat(result.id).isNotNull()
     }
 
     @Test
