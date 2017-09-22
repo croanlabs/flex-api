@@ -32,17 +32,25 @@ class GitHubScraperImpl(
         log.info("Starting Scraping data for ${projects.size}. GithubRate settings ${currentRate}")
         val stopWatch = StopWatch()
         stopWatch.start()
-        projects.forEach {
-            log.info("Starting Scraping data for ${it.projectType}")
-            if (it.isGitOrganistation()) {
-                scrapeOrganisation(it)
-            } else if (it.isGitRepository()) {
-                scrapeRepository(it)
+        for (project in projects) {
+            log.info("Starting Scraping data for ${project.projectType}")
+            try {
+                if (project.isGitOrganistation()) {
+                    scrapeOrganisation(project)
+                } else if (project.isGitRepository()) {
+                    scrapeRepository(project)
+                }
+            } catch (e: Exception) {
+                log.error("Problem occured scraping for ${project.projectType}", e)
             }
-            currentRate = printStatistics(currentRate, it)
+            currentRate = printStatistics(currentRate, project)
+            if (currentRate.remaining < 0) {
+                log.info("Rate limit has been exceeded, will break execution run")
+                break;
+            }
         }
         stopWatch.stop()
-        log.info("Finished Github Scraping data. ${stopWatch.shortSummary()}")
+        log.info("Finished Github Scraping data. ${stopWatch.shortSummary()} ${stopWatch.totalTimeSeconds}")
     }
 
     private fun scrapeRepository(projectJpa: ProjectJpa) {
