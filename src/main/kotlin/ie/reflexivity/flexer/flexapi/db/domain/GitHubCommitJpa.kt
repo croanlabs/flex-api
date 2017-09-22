@@ -51,9 +51,10 @@ data class GitHubCommitJpa(
 
 ) {
     companion object {
-        internal const val TABLE_NAME = "github_commit"
+        internal const val TABLE_NAME = "git_hub_commit"
         internal const val ID_NAME = TABLE_NAME + ID_SUFFIX
         private const val SEQUENCE_NAME = TABLE_NAME + SEQUENCE_SUFFIX
     }
 
 }
+

@@ -1,5 +1,6 @@
 package ie.reflexivity.flexer.flexapi.db.domain
 
+import com.google.common.base.Objects
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa.Companion.TABLE_NAME
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
@@ -45,6 +46,9 @@ data class GitHubRepositoryJpa(
         @OneToMany(mappedBy = "repository")
         val commits: MutableSet<GitHubCommitJpa> = mutableSetOf(),
 
+        @OneToMany(mappedBy = "repository")
+        val issues: MutableSet<GitHubIssueJpa> = mutableSetOf(),
+
         @Column(unique = true)
         val gitHubId: Int,
 
@@ -80,5 +84,26 @@ data class GitHubRepositoryJpa(
                 "openIssuesCount=$openIssuesCount, lastModified=$lastModified)"
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (other == null) return false;
+        if (other.javaClass != javaClass) return false
 
+        other as GitHubRepositoryJpa
+
+        return Objects.equal(id, other.id)
+                && Objects.equal(gitHubId, other.gitHubId)
+                && Objects.equal(project.id, other.project.id)
+                && Objects.equal(name, other.name)
+                && Objects.equal(language, other.language)
+                && Objects.equal(ownerName, other.ownerName)
+                && Objects.equal(starGazersCount, other.starGazersCount)
+                && Objects.equal(watchersCount, other.watchersCount)
+                && Objects.equal(forksCount, other.forksCount)
+                && Objects.equal(openIssuesCount, other.openIssuesCount)
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hashCode(id, gitHubId, project.id, name, language,
+                ownerName, starGazersCount, watchersCount, forksCount, openIssuesCount)
+    }
 }

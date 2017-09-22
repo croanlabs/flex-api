@@ -1,13 +1,16 @@
 package ie.reflexivity.flexer.flexapi.extensions
 
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubCommitJpa
+import ie.reflexivity.flexer.flexapi.db.domain.GitHubIssueJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubOrganisationJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa
+import ie.reflexivity.flexer.flexapi.db.domain.GitHubState
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.domain.UserJpa
 import ie.reflexivity.flexer.flexapi.model.Platform
 import ie.reflexivity.flexer.flexapi.model.Platform.GIT_HUB
 import org.kohsuke.github.GHCommit
+import org.kohsuke.github.GHIssue
 import org.kohsuke.github.GHOrganization
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GHUser
@@ -15,6 +18,7 @@ import org.kohsuke.github.GitHub
 import org.slf4j.LoggerFactory
 
 private val log = LoggerFactory.getLogger("ie.reflexivity.flexer.flexapi.extensions")
+
 fun GitHub.printRateDetails() {
     val rateLimit = rateLimit
     log.info("RateLimit Limit=${rateLimit.limit} Remaining=${rateLimit.remaining} Reset=${rateLimit.reset}")
@@ -74,4 +78,16 @@ fun GHCommit.toCommitJpa(gitHubRepositoryJpa: GitHubRepositoryJpa) =
                 commitDate = commitDate?.toLocalDateTime(),
                 authorDate = authoredDate?.toLocalDateTime(),
                 shaId = shA1
+        )
+
+fun GHIssue.toGitHubIssueJpa(gitHubRepositoryJpa: GitHubRepositoryJpa) =
+        GitHubIssueJpa(
+                repository = gitHubRepositoryJpa,
+                gitHubId = number,
+                createdOn = createdAt?.toLocalDateTime(),
+                closedOn = closedAt?.toLocalDateTime(),
+                createdBy = user.toUserJpa(GIT_HUB),
+                state = GitHubState.valueOf(state.name),
+                title = title,
+                closedBy = closedBy?.toUserJpa(GIT_HUB)
         )

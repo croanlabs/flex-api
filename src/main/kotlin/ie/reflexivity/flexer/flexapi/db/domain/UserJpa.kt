@@ -34,11 +34,14 @@ data class UserJpa(
         @ManyToMany(mappedBy = "collaborators")
         val gitHubRepositories: MutableSet<GitHubRepositoryJpa>? = mutableSetOf(),
 
-        @OneToMany(mappedBy = "author")
+        @OneToMany(mappedBy = "author", orphanRemoval = true)
         val authoredCommits: MutableSet<GitHubCommitJpa>? = mutableSetOf(),
 
-        @OneToMany(mappedBy = "committer")
+        @OneToMany(mappedBy = "committer", orphanRemoval = true)
         val committedCommits: MutableSet<GitHubCommitJpa>? = mutableSetOf(),
+
+        @OneToMany(mappedBy = "createdBy", orphanRemoval = true)
+        val issues: MutableSet<GitHubIssueJpa>? = mutableSetOf(),
 
         val platformId: String? = null,
 

@@ -7,6 +7,7 @@ import ie.reflexivity.flexer.flexapi.extensions.toDate
 import ie.reflexivity.flexer.flexapi.extensions.toGitHubRepositoryJpa
 import ie.reflexivity.flexer.flexapi.logger
 import ie.reflexivity.flexer.flexapi.web.exceptions.NotFoundException
+import org.kohsuke.github.GHIssueState.ALL
 import org.kohsuke.github.GHPersonSet
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GHUser
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.*
-
 
 interface GitHubRepositoryScraper {
     fun scrape(repositories: MutableCollection<GHRepository>, projectJpa: ProjectJpa)
@@ -24,7 +24,8 @@ interface GitHubRepositoryScraper {
 class GitHubRepositoryScraperImpl(
         private val gitHubRepositoryJpaRepository: GitHubRepositoryJpaRepository,
         private val gitHubRepositoryCollaboratorsScraper: GitHubRepositoryCollaboratorsScraper,
-        private val gitHubRepositoryCommitsScraper: GitHubRepositoryCommitsScraper
+        private val gitHubRepositoryCommitsScraper: GitHubRepositoryCommitsScraper,
+        private val gitHubIssuesScraper: GitHubIssuesScraper
 ) : GitHubRepositoryScraper {
 
     @Value("\${spring.jpa.properties.hibernate.jdbc.batch_size}")
@@ -36,23 +37,36 @@ class GitHubRepositoryScraperImpl(
         log.info("About to start scraping repositories for ${projectJpa.projectType} size=${repositories.size}")
         for (i in 0..repositories.size - 1) {
             val ghRepository = repositories.elementAt(i)
-            var latestRepoJpa = ghRepository.toGitHubRepositoryJpa(projectJpa)
-            val existingRepoJpa = gitHubRepositoryJpaRepository.findByGitHubId(latestRepoJpa.gitHubId)
-            var lastUpdated = Optional.empty<LocalDateTime>()
-            if (existingRepoJpa == null) {
-                latestRepoJpa = gitHubRepositoryJpaRepository.save(latestRepoJpa)
-            } else {
-                lastUpdated = Optional.of(latestRepoJpa.lastModified)
-                latestRepoJpa = gitHubRepositoryJpaRepository.save(latestRepoJpa.copy(id = existingRepoJpa.id))
-            }
-            if (i % batchSize == 0) {
-                gitHubRepositoryJpaRepository.flush()
-            }
+            val (latestRepoJpa, lastUpdated) = updateRepository(ghRepository, projectJpa, i)
             if (ghRepository.hasPushAccess() && ghRepository.collaborators != null) {
                 scrapeCollaborators(latestRepoJpa.gitHubId, ghRepository.collaborators)
             }
             scrapeCommits(ghRepository, latestRepoJpa, lastUpdated)
+            scrapeIssues(ghRepository, latestRepoJpa, lastUpdated)
         }
+    }
+
+    private fun updateRepository(ghRepository: GHRepository, projectJpa: ProjectJpa, i: Int): Pair<GitHubRepositoryJpa, Optional<LocalDateTime>> {
+        var latestRepoJpa = ghRepository.toGitHubRepositoryJpa(projectJpa)
+        val existingRepoJpa = gitHubRepositoryJpaRepository.findByGitHubId(latestRepoJpa.gitHubId)
+        var lastUpdated = Optional.empty<LocalDateTime>()
+        if (existingRepoJpa == null) {
+            latestRepoJpa = gitHubRepositoryJpaRepository.save(latestRepoJpa)
+        } else {
+            lastUpdated = Optional.of(latestRepoJpa.lastModified)
+            latestRepoJpa = gitHubRepositoryJpaRepository.save(latestRepoJpa.copy(id = existingRepoJpa.id))
+        }
+        if (i % batchSize == 0) {
+            gitHubRepositoryJpaRepository.flush()
+        }
+        return Pair(latestRepoJpa, lastUpdated)
+    }
+
+    private fun scrapeIssues(ghRepository: GHRepository, repositoryJpa: GitHubRepositoryJpa, lastUpdated: Optional<LocalDateTime>) {
+        //gitbub has a since tag but this lib doesnt expose it in its API :-(. Could/can be optimized
+        //https://developer.github.com/v3/issues/#list-issues-for-a-repository
+        val issues = ghRepository.listIssues(ALL)
+        gitHubIssuesScraper.scrape(issues, repositoryJpa)
     }
 
     private fun scrapeCommits(ghRepository: GHRepository, repositoryJpa: GitHubRepositoryJpa, lastUpdated: Optional<LocalDateTime>) {

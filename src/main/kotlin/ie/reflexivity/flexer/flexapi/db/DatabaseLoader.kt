@@ -3,7 +3,6 @@ package ie.reflexivity.flexer.flexapi.db
 import ie.reflexivity.flexer.flexapi.SpringProfiles
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
-import ie.reflexivity.flexer.flexapi.db.repository.UserJpaRepository
 import ie.reflexivity.flexer.flexapi.model.ProjectType.MELON_PORT
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
@@ -14,7 +13,6 @@ import javax.transaction.Transactional
 @Component
 @Profile(SpringProfiles.DEV_PROFILE)
 class ApplicationEventListener(
-        private val userJpaRepository: UserJpaRepository,
         private val projectJpaRepository: ProjectJpaRepository
 ) {
 

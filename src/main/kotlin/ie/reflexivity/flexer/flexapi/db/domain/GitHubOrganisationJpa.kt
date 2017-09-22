@@ -9,17 +9,13 @@ import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType.SEQUENCE
 import javax.persistence.Id
-import javax.persistence.Index
 import javax.persistence.JoinColumn
 import javax.persistence.OneToOne
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 
 @Entity
-@Table(name = TABLE_NAME, indexes = arrayOf(
-        Index(name = "IDX_${TABLE_NAME}_GITHUBID", columnList = "gitHubId")
-)
-)
+@Table(name = TABLE_NAME)
 data class GitHubOrganisationJpa(
 
         @Id
