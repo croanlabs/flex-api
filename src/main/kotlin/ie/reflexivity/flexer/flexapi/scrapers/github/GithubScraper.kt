@@ -10,6 +10,8 @@ import org.kohsuke.github.GitHub
 import org.kohsuke.github.PagedIterable
 import org.springframework.stereotype.Service
 import org.springframework.util.StopWatch
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 interface GitHubScraper {
     fun scrape()
@@ -28,29 +30,34 @@ class GitHubScraperImpl(
 
     override fun scrape() {
         val projects = projectJpaRepository.findAll()
+                .sortedWith(compareBy(ProjectJpa::gitHubLastScrapeRun)).filter {
+            it.gitHubLastScrapeRun == null || it.gitHubLastScrapeRun.toLocalDate() != LocalDate.now()
+        }
         var currentRate = gitHub.rateLimit
         log.info("Starting Scraping data for ${projects.size}. GithubRate settings ${currentRate}")
         val stopWatch = StopWatch()
         stopWatch.start()
-        for (project in projects) {
-            log.info("Starting Scraping data for ${project.projectType}")
+        for (projectJpa in projects) {
+            log.info("Starting Scraping data for ${projectJpa.projectType}")
             try {
-                if (project.isGitOrganistation()) {
-                    scrapeOrganisation(project)
-                } else if (project.isGitRepository()) {
-                    scrapeRepository(project)
+                if (projectJpa.isGitOrganistation()) {
+                    scrapeOrganisation(projectJpa)
+                } else if (projectJpa.isGitRepository()) {
+                    scrapeRepository(projectJpa)
                 }
+                val updatedProject = projectJpa.copy(gitHubLastScrapeRun = LocalDateTime.now())
+                projectJpaRepository.save(updatedProject)
             } catch (e: Exception) {
-                log.error("Problem occured scraping for ${project.projectType}", e)
+                log.error("Problem occured scraping for ${projectJpa.projectType}", e)
             }
-            currentRate = printStatistics(currentRate, project)
+            currentRate = printStatistics(currentRate, projectJpa)
             if (currentRate.remaining < 0) {
                 log.info("Rate limit has been exceeded, will break execution run")
                 break;
             }
         }
         stopWatch.stop()
-        log.info("Finished Github Scraping data. ${stopWatch.shortSummary()} ${stopWatch.totalTimeSeconds}")
+        log.info("Finished Github Scraping data. ${stopWatch.shortSummary()} ${stopWatch.prettyPrint()}")
     }
 
     private fun scrapeRepository(projectJpa: ProjectJpa) {

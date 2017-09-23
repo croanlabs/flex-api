@@ -258,6 +258,11 @@
     <changeSet author="j_bax (generated)" id="1506196125937-38">
         <addForeignKeyConstraint baseColumnNames="repository_id" baseTableName="git_hub_commit" constraintName="FKtam9ww5sihyse9nf5gfekv6dn" deferrable="false" initiallyDeferred="false" referencedColumnNames="git_hub_repository_id" referencedTableName="git_hub_repository" />
     </changeSet>
+    <changeSet author="j_bax (generated)" id="1506199263878-1">
+        <addColumn tableName="project">
+            <column name="git_hub_last_scrape_run" type="timestamp" />
+        </addColumn>
+    </changeSet>
 
 
     <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql" runAlways="true">

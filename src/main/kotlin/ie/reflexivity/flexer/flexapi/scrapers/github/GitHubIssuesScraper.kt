@@ -36,6 +36,7 @@ class GitHubIssuesScraperImpl(
         while (issuesIterator.hasNext()) {
             count++
             val issue = issuesIterator.next()
+            log.trace("Scraping issue ${issue.apiURL}")
             createUserIfNeeded(issue.user)
             if (issue.closedBy != null) createUserIfNeeded(issue.closedBy)
             val issueJpa = issue.toGitHubIssueJpa(repositoryJpa)
@@ -47,6 +48,7 @@ class GitHubIssuesScraperImpl(
                 gitHubIssueJpaRepository.save(issueJpa.copy(id = existingIssueJpa.id))
             }
             if (count % batchSize == 0) {
+                log.debug("Scrape issue count for ${repositoryJpa.name} $count")
                 gitHubIssueJpaRepository.flush()
             }
         }

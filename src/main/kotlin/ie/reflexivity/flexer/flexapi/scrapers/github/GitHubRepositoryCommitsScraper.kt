@@ -43,11 +43,13 @@ class GitHubRepositoryCommitsScraperImpl(
             while (commitsIterator.hasNext()) {
                 count++
                 val commit = commitsIterator.next()
+                log.trace("Scraping commit ${commit.htmlUrl}")
                 val author = createAuthor(commit)
                 val committer = createCommitter(commit)
                 val commitJpa = commit.toCommitJpa(repositoryJpa = githubRepository, author = author, committer = committer)
                 gitHubCommitJpaRepository.save(commitJpa)
                 if (count % batchSize == 0) {
+                    log.debug("Scrape commit count for ${githubRepository.name} $count")
                     gitHubCommitJpaRepository.flush()
                 }
             }
@@ -56,6 +58,7 @@ class GitHubRepositoryCommitsScraperImpl(
             //FIXME should mark the repo as invalid on our side -> AD-18
             log.error("problem scraping commits for ${githubRepository.name}", e)
         }
+        if (count > 0) gitHubCommitJpaRepository.flush()
         log.debug("Added $count new commits")
     }
 
