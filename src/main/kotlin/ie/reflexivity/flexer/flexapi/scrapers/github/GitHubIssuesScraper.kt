@@ -56,5 +56,5 @@ class GitHubIssuesScraperImpl(
 
     private fun createUserIfNeeded(user: GHUser) =
             userJpaRepository.findByPlatformUserIdAndPlatform(user.login, GIT_HUB) ?:
-                    userJpaRepository.saveAndFlush(user.toUserJpa(GIT_HUB))
+                    userJpaRepository.saveAndFlush(user.toUserJpa())
 }

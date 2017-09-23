@@ -40,7 +40,6 @@ class GitHubRepositoryScraperImplITest {
 
         testee.scrape(mutableListOf(repository), projectJpa)
 
-
         assertThat(gitHubCommitsJpaRepository.findAll().size).isGreaterThan(0)
         assertThat(gitHubIssuesJpaRepository.findAll().size).isGreaterThan(0)
         assertThat(userJpaRepository.findAll().size).isGreaterThan(0)

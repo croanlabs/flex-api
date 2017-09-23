@@ -7,7 +7,6 @@ import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubState
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.domain.UserJpa
-import ie.reflexivity.flexer.flexapi.model.Platform
 import ie.reflexivity.flexer.flexapi.model.Platform.GIT_HUB
 import org.kohsuke.github.GHCommit
 import org.kohsuke.github.GHIssue
@@ -15,6 +14,7 @@ import org.kohsuke.github.GHOrganization
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GHUser
 import org.kohsuke.github.GitHub
+import org.kohsuke.github.GitUser
 import org.slf4j.LoggerFactory
 
 private val log = LoggerFactory.getLogger("ie.reflexivity.flexer.flexapi.extensions")
@@ -54,8 +54,8 @@ fun GHRepository.toGitHubRepositoryJpa(projectJpa: ProjectJpa) =
                 openIssuesCount = openIssueCount
         )
 
-fun GHUser.toUserJpa(platform: Platform) = UserJpa(
-        platform = platform,
+fun GHUser.toUserJpa() = UserJpa(
+        platform = GIT_HUB,
         platformId = id.toString(),
         platformUserId = login,
         email = email,
@@ -70,11 +70,21 @@ fun GHUser.toUserJpa(platform: Platform) = UserJpa(
         gitHubPublicRepoCount = publicRepoCount
 )
 
-fun GHCommit.toCommitJpa(gitHubRepositoryJpa: GitHubRepositoryJpa) =
+fun GitUser.toUserJpa() = UserJpa(
+        platform = GIT_HUB,
+        platformId = email,
+        platformUserId = email,
+        email = email,
+        name = name,
+        created = date?.toLocalDateTime()
+)
+
+
+fun GHCommit.toCommitJpa(repositoryJpa: GitHubRepositoryJpa, author: UserJpa, committer: UserJpa) =
         GitHubCommitJpa(
-                author = author.toUserJpa(GIT_HUB),
-                committer = committer.toUserJpa(GIT_HUB),
-                repository = gitHubRepositoryJpa,
+                author = author,
+                committer = committer,
+                repository = repositoryJpa,
                 commitDate = commitDate?.toLocalDateTime(),
                 authorDate = authoredDate?.toLocalDateTime(),
                 shaId = shA1
@@ -86,8 +96,8 @@ fun GHIssue.toGitHubIssueJpa(gitHubRepositoryJpa: GitHubRepositoryJpa) =
                 gitHubId = number,
                 createdOn = createdAt?.toLocalDateTime(),
                 closedOn = closedAt?.toLocalDateTime(),
-                createdBy = user.toUserJpa(GIT_HUB),
+                createdBy = user.toUserJpa(),
                 state = GitHubState.valueOf(state.name),
                 title = title,
-                closedBy = closedBy?.toUserJpa(GIT_HUB)
+                closedBy = closedBy?.toUserJpa()
         )

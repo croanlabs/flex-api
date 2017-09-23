@@ -27,7 +27,7 @@ class GitHubMembersScraperImpl(
         val membersIterator = members.iterator()
         while (membersIterator.hasNext()) {
             val member = membersIterator.next()
-            val userJpa = member.toUserJpa(GIT_HUB)
+            val userJpa = member.toUserJpa()
             if (currentPlatformUsers.containsKey(userJpa.platformUserId)) {
                 projectJpa.users!!.remove(currentPlatformUsers[userJpa.platformUserId])
             }

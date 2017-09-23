@@ -5,7 +5,6 @@ import ie.reflexivity.flexer.flexapi.db.domain.UserJpa
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubRepositoryJpaRepository
 import ie.reflexivity.flexer.flexapi.extensions.toUserJpa
 import ie.reflexivity.flexer.flexapi.logger
-import ie.reflexivity.flexer.flexapi.model.Platform.GIT_HUB
 import org.kohsuke.github.GHUser
 import org.springframework.stereotype.Service
 
@@ -26,7 +25,7 @@ class GitHubRepositoryCollaboratorsScraperImpl(
         val currentCollaborators = mutableListOf<UserJpa>()
         for (i in 0..collaborators.size - 1) {
             val collaborator = collaborators.elementAt(i)
-            currentCollaborators.add(collaborator.toUserJpa(GIT_HUB))
+            currentCollaborators.add(collaborator.toUserJpa())
         }
         repositoryJpa.collaborators.clear()
         repositoryJpa.collaborators.addAll(currentCollaborators)
