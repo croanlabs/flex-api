@@ -46,6 +46,12 @@ data class GitHubCommitJpa(
 
         val commitDate: LocalDateTime? = null,
 
+        val linesAdded: Int = 0,
+
+        val linesDeleted: Int = 0,
+
+        val linesChanged: Int = 0,
+
         @UpdateTimestamp
         val lastModified: LocalDateTime = LocalDateTime.now()
 

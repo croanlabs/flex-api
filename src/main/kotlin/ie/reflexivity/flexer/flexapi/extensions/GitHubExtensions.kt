@@ -87,7 +87,11 @@ fun GHCommit.toCommitJpa(repositoryJpa: GitHubRepositoryJpa, author: UserJpa, co
                 repository = repositoryJpa,
                 commitDate = commitDate?.toLocalDateTime(),
                 authorDate = authoredDate?.toLocalDateTime(),
-                shaId = shA1
+                shaId = shA1,
+                linesAdded = linesAdded,
+                linesDeleted = linesDeleted,
+                linesChanged = linesChanged
+
         )
 
 fun GHIssue.toGitHubIssueJpa(gitHubRepositoryJpa: GitHubRepositoryJpa) =
