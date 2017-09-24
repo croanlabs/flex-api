@@ -3,8 +3,17 @@ package ie.reflexivity.flexer.flexapi.db
 import ie.reflexivity.flexer.flexapi.SpringProfiles
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
+import ie.reflexivity.flexer.flexapi.model.ProjectType.ARAGON
+import ie.reflexivity.flexer.flexapi.model.ProjectType.EOS
+import ie.reflexivity.flexer.flexapi.model.ProjectType.ETHERUM
+import ie.reflexivity.flexer.flexapi.model.ProjectType.FILE_COIN
 import ie.reflexivity.flexer.flexapi.model.ProjectType.GOLEM
+import ie.reflexivity.flexer.flexapi.model.ProjectType.HUMANIG
+import ie.reflexivity.flexer.flexapi.model.ProjectType.IOTA
+import ie.reflexivity.flexer.flexapi.model.ProjectType.IPFS
 import ie.reflexivity.flexer.flexapi.model.ProjectType.MELON_PORT
+import ie.reflexivity.flexer.flexapi.model.ProjectType.NEM
+import ie.reflexivity.flexer.flexapi.model.ProjectType.STEEM
 import ie.reflexivity.flexer.flexapi.model.ProjectType.TEZOS
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
@@ -22,7 +31,6 @@ class ApplicationEventListener(
     fun applicationStarted() {
         createProjectStaticData();
     }
-
 
     @Transactional
     private fun createProjectStaticData() {
@@ -51,8 +59,6 @@ class ApplicationEventListener(
         )
         createProjectIfDoesntExist(golemProject)
 
-
-/*
         val ipfsProject = ProjectJpa(
                 projectType = IPFS,
                 projectHomePage = "https://github.com/ipfs",
@@ -61,7 +67,7 @@ class ApplicationEventListener(
         )
         createProjectIfDoesntExist(ipfsProject)
 
-val etherumProject = ProjectJpa(
+        val etherumProject = ProjectJpa(
                 projectType = ETHERUM,
                 projectHomePage = "https://ethereum.org/",
                 githubUrl = "https://github.com/ethereum/",
@@ -69,8 +75,7 @@ val etherumProject = ProjectJpa(
         )
         createProjectIfDoesntExist(etherumProject)
 
-
-                val eosProject = ProjectJpa(
+        val eosProject = ProjectJpa(
                 projectType = EOS,
                 projectHomePage = "https://eos.io/",
                 githubUrl = "http://github.com/eosio",
@@ -85,7 +90,6 @@ val etherumProject = ProjectJpa(
                 gitHubOrganisation = "aragon"
         )
         createProjectIfDoesntExist(aragonProject)
-
 
         val fileCoinProject = ProjectJpa(
                 projectType = FILE_COIN,
@@ -102,7 +106,6 @@ val etherumProject = ProjectJpa(
                 gitHubOrganisation = "humaniq"
         )
         createProjectIfDoesntExist(humaniqProject)
-
 
         val steemProject = ProjectJpa(
                 projectType = STEEM,
@@ -127,7 +130,7 @@ val etherumProject = ProjectJpa(
                 gitHubOrganisation = "iotaledger"
         )
         createProjectIfDoesntExist(iotaProject)
-*/
+
     }
 
     private fun createProjectIfDoesntExist(projectJpa: ProjectJpa) =

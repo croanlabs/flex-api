@@ -34,7 +34,7 @@ class GitHubScraperImpl(
             it.gitHubLastScrapeRun == null || it.gitHubLastScrapeRun.toLocalDate() != LocalDate.now()
         }
         var currentRate = gitHub.rateLimit
-        log.info("Starting Scraping data for ${projects.size}. GithubRate settings ${currentRate}")
+        log.info("Starting Scraping data for ${projects.size}. GithubRate settings ${currentRate}. ${projects}")
         val stopWatch = StopWatch()
         stopWatch.start()
         for (projectJpa in projects) {

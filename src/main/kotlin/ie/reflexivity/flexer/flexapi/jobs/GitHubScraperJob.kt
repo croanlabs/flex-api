@@ -13,7 +13,7 @@ class GitHubScraperJob {
 
     private val log by logger()
 
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 * * * * *")
     fun startGitHubScraping() {
         log.info("Job triggered to start git hub scraping")
         gitHubScraper.scrape()

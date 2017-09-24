@@ -89,12 +89,13 @@ data class ProjectJpa(
 
     override fun toString(): String {
         return MoreObjects.toStringHelper(this)
-                .add("platformUserId", id)
+                .add("id", id)
                 .add("projectType", projectType)
                 .add("projectHomePage", projectHomePage)
                 .add("githubUrl", githubUrl)
                 .add("gitHubOrganisation", gitHubOrganisation)
                 .add("gitHubRepository", gitHubRepository)
+                .add("gitHubLastScrapeRun", gitHubLastScrapeRun)
                 .add("lastModified", lastModified)
                 .toString()
     }
