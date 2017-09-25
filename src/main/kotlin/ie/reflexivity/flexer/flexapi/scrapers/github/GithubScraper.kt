@@ -47,17 +47,16 @@ class GitHubScraperImpl(
                 }
                 val updatedProject = projectJpa.copy(gitHubLastScrapeRun = LocalDateTime.now())
                 projectJpaRepository.save(updatedProject)
+            } catch (e: RateLimitException) {
+                log.warn("Rate limit has been exceeded, will break execution run. CurrentProject ${projectJpa.projectType}")
+                break;
             } catch (e: Exception) {
-                log.error("Problem occured scraping for ${projectJpa.projectType}", e)
+                log.error("Problem occured scraping for ${projectJpa.projectType}. Will carry on to next project.", e)
             }
             currentRate = printStatistics(currentRate, projectJpa)
-            if (currentRate.remaining < 0) {
-                log.info("Rate limit has been exceeded, will break execution run")
-                break;
-            }
         }
         stopWatch.stop()
-        log.info("Finished Github Scraping data. ${stopWatch.shortSummary()} ${stopWatch.prettyPrint()}")
+        log.info("Finished Github Scraping data. ${stopWatch.shortSummary()} ${stopWatch.totalTimeSeconds}")
     }
 
     private fun scrapeRepository(projectJpa: ProjectJpa) {
@@ -75,7 +74,6 @@ class GitHubScraperImpl(
 
     private fun scrapeMembers(listMembers: PagedIterable<GHUser>, projectJpa: ProjectJpa) =
             gitHubMembersScraper.scrape(listMembers, projectJpa)
-
 
     private fun scrapeOrganisationRepositories(organisation: GHOrganization, projectJpa: ProjectJpa) {
         val repositories = organisation.repositories.values
