@@ -63,10 +63,11 @@ fun GitHubRepositoryJpa.Companion.testIntance(projectJpa: ProjectJpa = ProjectJp
                 openIssuesCount = 100
         )
 
-fun GitHubCommitJpa.Companion.testInstance(gitHubRepositoryJpa: GitHubRepositoryJpa) = GitHubCommitJpa(
-        author = UserJpa.testInstance(),
-        committer = UserJpa.testInstance(),
-        repository = gitHubRepositoryJpa,
+fun GitHubCommitJpa.Companion.testInstance(repository: GitHubRepositoryJpa, authorAndCommitter: UserJpa = UserJpa.testInstance())
+        = GitHubCommitJpa(
+        author = authorAndCommitter,
+        committer = authorAndCommitter,
+        repository = repository,
         shaId = "anyShaId",
         authorDate = LocalDateTime.now(),
         commitDate = LocalDateTime.now()

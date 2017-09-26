@@ -2,6 +2,7 @@ package ie.reflexivity.flexer.flexapi.scrapers.github
 
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
+import ie.reflexivity.flexer.flexapi.extensions.isOlderThanADay
 import ie.reflexivity.flexer.flexapi.logger
 import org.kohsuke.github.GHOrganization
 import org.kohsuke.github.GHRateLimit
@@ -10,7 +11,6 @@ import org.kohsuke.github.GitHub
 import org.kohsuke.github.PagedIterable
 import org.springframework.stereotype.Service
 import org.springframework.util.StopWatch
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 interface GitHubScraper {
@@ -31,7 +31,7 @@ class GitHubScraperImpl(
     override fun scrape() {
         val projects = projectJpaRepository.findAll()
                 .sortedWith(compareBy(ProjectJpa::gitHubLastScrapeRun)).filter {
-            it.gitHubLastScrapeRun == null || it.gitHubLastScrapeRun.toLocalDate() != LocalDate.now()
+            it.gitHubLastScrapeRun == null || it.gitHubLastScrapeRun.isOlderThanADay()
         }
         var currentRate = gitHub.rateLimit
         log.info("Starting Scraping data for ${projects.size}. GithubRate settings ${currentRate}. ${projects}")
