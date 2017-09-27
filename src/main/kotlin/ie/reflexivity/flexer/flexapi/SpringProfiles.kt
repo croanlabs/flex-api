@@ -1,5 +1,6 @@
 package ie.reflexivity.flexer.flexapi
 
-object SpringProfiles{
+object SpringProfiles {
     const val DEV_PROFILE = "dev"
+    const val TEST_PROFILE = "test"
 }

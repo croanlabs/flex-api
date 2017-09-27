@@ -2,7 +2,6 @@ package ie.reflexivity.flexer.flexapi.db.domain
 
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
 import ie.reflexivity.flexer.flexapi.model.ProjectType
-import ie.reflexivity.flexer.flexapi.model.ProjectType.ARAGON
 import ie.reflexivity.flexer.flexapi.model.ProjectType.EOS
 import ie.reflexivity.flexer.flexapi.model.ProjectType.ETHERUM
 import org.junit.Test

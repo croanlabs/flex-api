@@ -6,6 +6,6 @@ import ie.reflexivity.flexer.flexapi.model.User
 
 fun UserJpa.toUser() =
         User(
-                id = id,
-                userId = userId
+                platformUserId = platformUserId,
+                platform = platform
         )

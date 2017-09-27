@@ -1,0 +1,10 @@
+spring:
+    application:
+        name: Flex API
+    h2:
+        console:
+            enabled: true
+
+github:
+   username: lovelyliatroim
+   token: dce4b8ad10dad49a0b1b3f9da6b64cfbfaf401e3
