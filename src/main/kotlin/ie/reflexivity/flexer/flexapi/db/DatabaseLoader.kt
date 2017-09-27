@@ -37,7 +37,7 @@ class ApplicationEventListener(
 
         val melonPort = ProjectJpa(
                 projectType = MELON_PORT,
-                projectHomePage = "https@ //github.com/melonproject",
+                projectHomePage = "https@//github.com/melonproject",
                 githubUrl = "https://github.com/melonproject",
                 gitHubOrganisation = "melonproject"
         )

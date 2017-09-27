@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import javax.inject.Inject
 
-private const val FIVE_MINUTES = 1000L * 60L * 5
+private const val ONE_HOUR_AND_ONE_MIN = 1000L * 60L * 61
 
 @Component
 class GitHubScraperJob {
@@ -17,7 +17,7 @@ class GitHubScraperJob {
 
     private val log by logger()
 
-    @Scheduled(fixedRate = FIVE_MINUTES)
+    @Scheduled(initialDelay = 1000, fixedRate = ONE_HOUR_AND_ONE_MIN)
     fun startGitHubScraping() {
         log.info("Job triggered to start git hub scraping")
         val rateLimit = gitHub.rateLimit
