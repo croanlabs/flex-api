@@ -8,7 +8,6 @@ import ie.reflexivity.flexer.flexapi.extensions.toDate
 import ie.reflexivity.flexer.flexapi.extensions.toGitHubRepositoryJpa
 import ie.reflexivity.flexer.flexapi.logger
 import ie.reflexivity.flexer.flexapi.web.exceptions.NotFoundException
-import org.kohsuke.github.GHIssueState.ALL
 import org.kohsuke.github.GHPersonSet
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GHUser
@@ -24,8 +23,8 @@ class GitHubRepositoryScraperImpl(
         private val gitHubRepositoryJpaRepository: GitHubRepositoryJpaRepository,
         private val gitHubRepositoryCollaboratorsScraper: GitHubRepositoryCollaboratorsScraper,
         private val gitHubRepositoryCommitsScraper: GitHubRepositoryCommitsScraper,
-        private val gitHubIssuesScraper: GitHubIssuesScraper,
-        private val gitHubCommitJpaRepository: GitHubCommitJpaRepository
+        private val gitHubCommitJpaRepository: GitHubCommitJpaRepository,
+        private val gitHubIssueScraper: GitHubIssuesScraper
 ) : GitHubRepositoryScraper {
 
     @Value("\${spring.jpa.properties.hibernate.jdbc.batch_size}")
@@ -37,16 +36,19 @@ class GitHubRepositoryScraperImpl(
         log.info("About to start scraping repositories for ${projectJpa.projectType} size=${repositories.size}")
         for (i in 0..repositories.size - 1) {
             val ghRepository = repositories.elementAt(i)
-            val latestRepoJpa = updateRepository(ghRepository, projectJpa, i)
+            val latestRepoJpa = updateRepository(ghRepository, projectJpa)
             if (ghRepository.hasPushAccess() && ghRepository.collaborators != null) {
                 scrapeCollaborators(latestRepoJpa.gitHubId, ghRepository.collaborators)
             }
+            if (i % batchSize == 0) {
+                gitHubRepositoryJpaRepository.flush()
+            }
             scrapeCommits(ghRepository, latestRepoJpa)
-            scrapeIssues(ghRepository, latestRepoJpa)
+            gitHubIssueScraper.scrape(ghRepository.ownerName, ghRepository.name, latestRepoJpa)
         }
     }
 
-    private fun updateRepository(ghRepository: GHRepository, projectJpa: ProjectJpa, i: Int): GitHubRepositoryJpa {
+    private fun updateRepository(ghRepository: GHRepository, projectJpa: ProjectJpa): GitHubRepositoryJpa {
         var latestRepoJpa = ghRepository.toGitHubRepositoryJpa(projectJpa)
         val existingRepoJpa = gitHubRepositoryJpaRepository.findByGitHubId(latestRepoJpa.gitHubId)
         if (existingRepoJpa == null) {
@@ -54,21 +56,11 @@ class GitHubRepositoryScraperImpl(
         } else {
             latestRepoJpa = gitHubRepositoryJpaRepository.save(latestRepoJpa.copy(id = existingRepoJpa.id))
         }
-        if (i % batchSize == 0) {
-            gitHubRepositoryJpaRepository.flush()
-        }
         return latestRepoJpa
     }
 
-    private fun scrapeIssues(ghRepository: GHRepository, repositoryJpa: GitHubRepositoryJpa) {
-        //gitbub has a since tag but this lib doesnt expose it in its API :-(. Could/can be optimized
-        //https://developer.github.com/v3/issues/#list-issues-for-a-repository
-        val issues = ghRepository.listIssues(ALL)
-        gitHubIssuesScraper.scrape(issues, repositoryJpa)
-    }
-
     private fun scrapeCommits(ghRepository: GHRepository, repositoryJpa: GitHubRepositoryJpa) {
-        val lastCommit = gitHubCommitJpaRepository.findFirstByRepositoryOrderByLastModifiedDesc(repositoryJpa)
+        val lastCommit = gitHubCommitJpaRepository.findFirstByRepositoryOrderByCommitDateDesc(repositoryJpa)
         if (lastCommit != null) {
             val lastDate = lastCommit.commitDate!!.minusDays(1).toDate()
             log.debug("Only pulling commits since $lastDate")

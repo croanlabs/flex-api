@@ -1,62 +1,90 @@
 package ie.reflexivity.flexer.flexapi.scrapers.github
 
+import ie.reflexivity.flexer.flexapi.client.github.GitHubIssue
+import ie.reflexivity.flexer.flexapi.client.github.GitHubPage
+import ie.reflexivity.flexer.flexapi.client.github.api.GitHubIssueApiService
+import ie.reflexivity.flexer.flexapi.client.github.rateLimit
+import ie.reflexivity.flexer.flexapi.client.github.toGitHubPage
+import ie.reflexivity.flexer.flexapi.db.domain.GitHubIssueJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa
+import ie.reflexivity.flexer.flexapi.db.domain.GitHubState.OPEN
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubIssueJpaRepository
-import ie.reflexivity.flexer.flexapi.db.repository.UserJpaRepository
+import ie.reflexivity.flexer.flexapi.extensions.toGitHubFormat
 import ie.reflexivity.flexer.flexapi.extensions.toGitHubIssueJpa
-import ie.reflexivity.flexer.flexapi.extensions.toUserJpa
 import ie.reflexivity.flexer.flexapi.logger
-import ie.reflexivity.flexer.flexapi.model.Platform.GIT_HUB
-import org.kohsuke.github.GHIssue
-import org.kohsuke.github.GHUser
-import org.kohsuke.github.PagedIterable
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import retrofit2.Call
+
 
 interface GitHubIssuesScraper {
-    fun scrape(issues: PagedIterable<GHIssue>, repositoryJpa: GitHubRepositoryJpa)
+    fun scrape(ownerName: String, repositoryName: String, repositoryJpa: GitHubRepositoryJpa)
 }
 
 @Service
 class GitHubIssuesScraperImpl(
+        private val issueApiService: GitHubIssueApiService,
         private val gitHubIssueJpaRepository: GitHubIssueJpaRepository,
-        private val userJpaRepository: UserJpaRepository
-
+        private val gitHubUserService: GitHubUserService
 ) : GitHubIssuesScraper {
-
-    @Value("\${spring.jpa.properties.hibernate.jdbc.batch_size}")
-    private val batchSize: Int = 30
 
     private val log by logger()
 
-    override fun scrape(issues: PagedIterable<GHIssue>, repositoryJpa: GitHubRepositoryJpa) {
-        log.info("Scraping issues for ${repositoryJpa.name}")
-        val issuesIterator = issues.iterator()
-        var count = 0
-        while (issuesIterator.hasNext()) {
-            count++
-            val issue = issuesIterator.next()
-            log.trace("Scraping issue ${issue.apiURL}")
-            createUserIfNeeded(issue.user)
-            if (issue.closedBy != null) createUserIfNeeded(issue.closedBy)
-            val issueJpa = issue.toGitHubIssueJpa(repositoryJpa)
-            //Potential bottleneck, single queries vs bulk queries. Lets see.
-            val existingIssueJpa = gitHubIssueJpaRepository.fetchIssue(issueJpa.gitHubId, repositoryJpa.id)
-            if (existingIssueJpa == null) {
-                gitHubIssueJpaRepository.save(issueJpa)
-            } else if (existingIssueJpa.isOpen()) {
-                gitHubIssueJpaRepository.save(issueJpa.copy(id = existingIssueJpa.id))
+    override fun scrape(ownerName: String, repositoryName: String, repositoryJpa: GitHubRepositoryJpa) {
+        val lastIssue = fetchLastIssueSinceLastRun(repositoryJpa)
+        var hasMorePages = true
+        var pageNumber = 1
+        while (hasMorePages) {
+            var issuesCall = issueApiService.listIssues(
+                    owner = ownerName, repository = repositoryName, page = pageNumber.toString())
+            if (lastIssue != null) {
+                log.info("Will scrape issues from the oldest open issue which is ${repositoryJpa.name} ${lastIssue}")
+                issuesCall = issueApiService.listIssues(
+                        owner = ownerName, repository = repositoryName, page = pageNumber.toString(),
+                        since = lastIssue.createdOn!!.toGitHubFormat())
             }
-            if (count % batchSize == 0) {
-                log.debug("Scrape issue count for ${repositoryJpa.name} $count")
-                gitHubIssueJpaRepository.flush()
+            log.debug("Scraping issues for ${repositoryJpa.name} ...pageNumber $pageNumber")
+            val gitHubPage = excecuteIssuesCall(issuesCall, repositoryJpa)
+            hasMorePages = gitHubPage.hasNext()
+            if (hasMorePages) {
+                pageNumber = gitHubPage.nextPageNumber
             }
         }
-        if (count > 0) gitHubIssueJpaRepository.flush()
-        log.info("Scraped $count issues for ${repositoryJpa.name}")
     }
 
-    private fun createUserIfNeeded(user: GHUser) =
-            userJpaRepository.findByPlatformUserIdAndPlatform(user.login, GIT_HUB) ?:
-                    userJpaRepository.saveAndFlush(user.toUserJpa())
+    private fun excecuteIssuesCall(issuesCall: Call<List<GitHubIssue>>, repositoryJpa: GitHubRepositoryJpa): GitHubPage {
+        val callResult = issuesCall.execute()
+        val issues = callResult.body()!!
+        for (issue in issues) {
+            val gitHubIssueJpa = createHitHubIssueJpa(issue, repositoryJpa)
+            val existingIssueJpa = gitHubIssueJpaRepository.fetchIssue(gitHubIssueJpa.gitHubId, repositoryJpa.id)
+            if (existingIssueJpa == null) {
+                gitHubIssueJpaRepository.save(gitHubIssueJpa)
+            } else if (existingIssueJpa.isOpen()) {
+                gitHubIssueJpaRepository.save(gitHubIssueJpa.copy(id = existingIssueJpa.id))
+            }
+        }
+        gitHubIssueJpaRepository.flush()
+        log.debug("Rate limit " + callResult.headers().rateLimit())
+        return callResult.headers().toGitHubPage()
+    }
+
+    private fun createHitHubIssueJpa(gitHubIssue: GitHubIssue, repositoryJpa: GitHubRepositoryJpa): GitHubIssueJpa {
+        val createdBy = gitHubUserService.fetchOrCreate(gitHubIssue.user)
+        if (gitHubIssue.assignee != null) {
+            val closedByUser = gitHubUserService.fetchOrCreate(gitHubIssue.assignee)
+            return gitHubIssue.toGitHubIssueJpa(repositoryJpa, createdBy, closedByUser)
+        }
+        return gitHubIssue.toGitHubIssueJpa(repositoryJpa, createdBy)
+    }
+
+    /**
+     * Return the last open issue and if none then return the last closed issue.
+     */
+    private fun fetchLastIssueSinceLastRun(repositoryJpa: GitHubRepositoryJpa): GitHubIssueJpa? {
+        val lastOpenIssue = gitHubIssueJpaRepository.findFirstByRepositoryAndStateOrderByCreatedOn(repositoryJpa, OPEN)
+        if (lastOpenIssue != null) {
+            return lastOpenIssue
+        }
+        return gitHubIssueJpaRepository.findFirstByRepositoryOrderByCreatedOnDesc(repositoryJpa)
+    }
 }

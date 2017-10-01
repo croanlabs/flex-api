@@ -1,15 +1,15 @@
 package ie.reflexivity.flexer.flexapi.extensions
 
+import ie.reflexivity.flexer.flexapi.client.github.GitHubIssue
+import ie.reflexivity.flexer.flexapi.client.github.GitHubUser
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubCommitJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubIssueJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubOrganisationJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa
-import ie.reflexivity.flexer.flexapi.db.domain.GitHubState
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.domain.UserJpa
 import ie.reflexivity.flexer.flexapi.model.Platform.GIT_HUB
 import org.kohsuke.github.GHCommit
-import org.kohsuke.github.GHIssue
 import org.kohsuke.github.GHOrganization
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GHUser
@@ -63,12 +63,31 @@ fun GHUser.toUserJpa() = UserJpa(
         company = company,
         blog = blog,
         name = name,
+        avatarUrl = avatarUrl,
         created = createdAt?.toLocalDateTime(),
         gitHubFollowersCount = followersCount,
         gitHubFollowingCount = followingCount,
         gitHubPublicGistCount = publicGistCount,
         gitHubPublicRepoCount = publicRepoCount
 )
+
+fun GitHubUser.toUserJpa() = UserJpa(
+        platform = GIT_HUB,
+        platformId = id,
+        platformUserId = login,
+        email = email,
+        location = location,
+        company = company,
+        blog = blog,
+        name = name,
+        avatarUrl = avatarUrl,
+        created = created_at,
+        gitHubFollowersCount = followers,
+        gitHubFollowingCount = following,
+        gitHubPublicGistCount = public_gits,
+        gitHubPublicRepoCount = public_repos
+)
+
 
 fun GitUser.toUserJpa() = UserJpa(
         platform = GIT_HUB,
@@ -94,14 +113,14 @@ fun GHCommit.toCommitJpa(repositoryJpa: GitHubRepositoryJpa, author: UserJpa, co
 
         )
 
-fun GHIssue.toGitHubIssueJpa(gitHubRepositoryJpa: GitHubRepositoryJpa) =
+fun GitHubIssue.toGitHubIssueJpa(gitHubRepositoryJpa: GitHubRepositoryJpa, createdBy: UserJpa, closedBy: UserJpa? = null) =
         GitHubIssueJpa(
                 repository = gitHubRepositoryJpa,
                 gitHubId = number,
-                createdOn = createdAt?.toLocalDateTime(),
-                closedOn = closedAt?.toLocalDateTime(),
-                createdBy = user.toUserJpa(),
-                state = GitHubState.valueOf(state.name),
+                createdOn = created_at,
+                closedOn = closed_at,
+                createdBy = createdBy,
+                state = state,
                 title = title,
-                closedBy = closedBy?.toUserJpa()
+                closedBy = closedBy
         )

@@ -55,6 +55,8 @@ data class UserJpa(
 
         val blog: String? = null,
 
+        val avatarUrl: String? = null,
+
         val created: LocalDateTime? = null,
 
         val gitHubFollowersCount: Int = 0,

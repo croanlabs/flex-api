@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface GitHubCommitJpaRepository : JpaRepository<GitHubCommitJpa, Long> {
 
-    fun findFirstByRepositoryOrderByLastModifiedDesc(repository: GitHubRepositoryJpa): GitHubCommitJpa?
+    fun findFirstByRepositoryOrderByCommitDateDesc(repository: GitHubRepositoryJpa): GitHubCommitJpa?
 
+    fun existsByRepositoryAndShaId(repository: GitHubRepositoryJpa, shaId: String): Boolean
 }
