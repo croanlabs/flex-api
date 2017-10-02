@@ -58,8 +58,7 @@ class GitHubRepositoryCommitsScraperImpl(
             }
         } catch (e: Error) {
             //Client Lib throws an error :-(. Happens when repo is empty, 409 returned from API.
-            //FIXME should mark the repo as invalid on our side -> AD-18
-            log.error("problem scraping commits for ${githubRepository.name}", e)
+            log.info("Repository ${githubRepository.name} has no commits. ${e.message}")
         }
         if (count > 0) gitHubCommitJpaRepository.flush()
         log.debug("Added $count new commits")
