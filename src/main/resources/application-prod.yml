@@ -11,7 +11,7 @@ spring:
         username: flex_app
         password: flex_app_prod_#981
     jpa:
-      show-sql: true
+      show-sql: false
       properties:
         hibernate:
           default_schema: flex_admin

@@ -2,7 +2,7 @@ package ie.reflexivity.flexer.flexapi.scrapers.github
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import ie.reflexivity.flexer.flexapi.CleanDatabase
+import ie.reflexivity.flexer.flexapi.FlexIntegrationTest
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubOrganisationJpa
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubOrganisationJpaRepository
@@ -13,15 +13,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.kohsuke.github.GHOrganization
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.test.context.junit4.SpringRunner
 import java.net.URL
 import javax.inject.Inject
 
 @RunWith(SpringRunner::class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@CleanDatabase
+@FlexIntegrationTest
 class GitHubOrganisationScraperITest {
 
     @Inject private lateinit var testee: GitHubOrganisationScraper

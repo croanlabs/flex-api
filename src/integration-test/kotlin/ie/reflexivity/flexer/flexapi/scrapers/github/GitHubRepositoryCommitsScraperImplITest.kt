@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 @RunWith(SpringRunner::class)
 @FlexIntegrationTest
-class GitHubRepositoryCommitsScraperImplTest {
+class GitHubRepositoryCommitsScraperImplITest {
 
     @Inject lateinit var projectJpaRepository: ProjectJpaRepository
     @Inject lateinit var gitHubRepoJpaRepository: GitHubRepositoryJpaRepository
