@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component
 import javax.transaction.Transactional
 
 @Component
-@Profile(SpringProfiles.DEV_PROFILE)
+@Profile("!" + SpringProfiles.TEST_PROFILE)
 class ApplicationEventListener(
         private val projectJpaRepository: ProjectJpaRepository
 ) {
@@ -34,6 +34,15 @@ class ApplicationEventListener(
 
     @Transactional
     private fun createProjectStaticData() {
+
+        val golemProject = ProjectJpa(
+                projectType = GOLEM,
+                projectHomePage = "https://golem.network/",
+                githubUrl = "https://github.com/golemfactory/golem",
+                gitHubRepository = "golemfactory/golem"
+        )
+        createProjectIfDoesntExist(golemProject)
+
 
         val melonPort = ProjectJpa(
                 projectType = MELON_PORT,
@@ -50,14 +59,6 @@ class ApplicationEventListener(
                 gitHubRepository = "tezos/tezos"
         )
         createProjectIfDoesntExist(tezusProject)
-
-        val golemProject = ProjectJpa(
-                projectType = GOLEM,
-                projectHomePage = "https://golem.network/",
-                githubUrl = "https://github.com/golemfactory/golem",
-                gitHubRepository = "golemfactory/golem"
-        )
-        createProjectIfDoesntExist(golemProject)
 
         val ipfsProject = ProjectJpa(
                 projectType = IPFS,

@@ -9,7 +9,6 @@ import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubCommitJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubRepositoryJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
-import ie.reflexivity.flexer.flexapi.db.repository.UserJpaRepository
 import ie.reflexivity.flexer.flexapi.extensions.toDate
 import ie.reflexivity.flexer.flexapi.test.infrastructure.testInstance
 import ie.reflexivity.flexer.flexapi.test.infrastructure.testIntance
@@ -25,12 +24,11 @@ import javax.inject.Inject
 
 @RunWith(SpringRunner::class)
 @FlexIntegrationTest
-class GitHubRepositoryCommitsScraperImplTest {
+class GitHubRepositoryCommitsScraperImplITest {
 
     @Inject lateinit var projectJpaRepository: ProjectJpaRepository
     @Inject lateinit var gitHubRepoJpaRepository: GitHubRepositoryJpaRepository
     @Inject lateinit var gitHubCommitJpaRepository: GitHubCommitJpaRepository
-    @Inject lateinit var userJpaRepository: UserJpaRepository
     @Inject lateinit var testee: GitHubRepositoryCommitsScraper
 
     @Test

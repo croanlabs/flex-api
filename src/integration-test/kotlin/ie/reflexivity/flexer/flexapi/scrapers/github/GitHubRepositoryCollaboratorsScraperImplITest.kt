@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @RunWith(SpringRunner::class)
 @FlexIntegrationTest
-class GitHubRepositoryCollaboratorsScraperImplTest {
+class GitHubRepositoryCollaboratorsScraperImplITest {
 
     @Inject lateinit var gitHubRepositoryJpaRepository: GitHubRepositoryJpaRepository
     @Inject lateinit var projectJpaRepository: ProjectJpaRepository

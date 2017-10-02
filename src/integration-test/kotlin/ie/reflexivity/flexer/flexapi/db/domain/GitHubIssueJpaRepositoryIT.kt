@@ -1,5 +1,7 @@
 package ie.reflexivity.flexer.flexapi.db.domain
 
+import ie.reflexivity.flexer.flexapi.db.domain.GitHubState.CLOSED
+import ie.reflexivity.flexer.flexapi.db.domain.GitHubState.OPEN
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubIssueJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubRepositoryJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
@@ -10,6 +12,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.test.context.junit4.SpringRunner
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @JpaRepositoryTest
@@ -49,6 +52,34 @@ class GitHubIssueJpaRepositoryIT {
         val result = testee.fetchIssue(issueJpa.gitHubId, NON_EXISTENT_REPO_ID)
 
         assertThat(result).isNull()
+    }
+
+    @Test
+    fun `Given repository with issues When fetching the oldest open issue Then the issue oldest should be returned`() {
+        val (repoJpa, userJpa) = createRepository()
+        val expectedResult = testee.save(GitHubIssueJpa.testInstance(gitHubRepository = repoJpa, creator = userJpa,
+                state = OPEN, createdOn = LocalDateTime.now().minusDays(2), gitHubId = 100))
+        testee.save(GitHubIssueJpa.testInstance(gitHubRepository = repoJpa, creator = userJpa,
+                state = OPEN, createdOn = LocalDateTime.now(), gitHubId = 101))
+
+        val result = testee.findFirstByRepositoryAndStateOrderByCreatedOn(repoJpa, OPEN)
+
+        assertThat(result).isEqualTo(expectedResult)
+    }
+
+    @Test
+    fun `Given repository with issues When fetching Then the issue oldest should be returned`() {
+        val (repoJpa, userJpa) = createRepository()
+        testee.save(GitHubIssueJpa.testInstance(gitHubRepository = repoJpa, creator = userJpa,
+                state = OPEN, createdOn = LocalDateTime.now().minusDays(1), gitHubId = 100).copy(closedOn = null))
+        testee.save(GitHubIssueJpa.testInstance(gitHubRepository = repoJpa, creator = userJpa,
+                state = CLOSED, createdOn = LocalDateTime.now().minusDays(2), gitHubId = 101))
+        val expectedResult = testee.save(GitHubIssueJpa.testInstance(gitHubRepository = repoJpa, creator = userJpa,
+                state = CLOSED, createdOn = LocalDateTime.now(), gitHubId = 102))
+
+        val result = testee.findFirstByRepositoryOrderByCreatedOnDesc(repoJpa)
+
+        assertThat(result).isEqualTo(expectedResult)
     }
 
 

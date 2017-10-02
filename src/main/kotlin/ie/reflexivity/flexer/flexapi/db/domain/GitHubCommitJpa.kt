@@ -13,10 +13,15 @@ import javax.persistence.JoinColumns
 import javax.persistence.ManyToOne
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
+import javax.persistence.UniqueConstraint
 import javax.validation.constraints.NotNull
 
 @Entity
-@Table(name = TABLE_NAME)
+@Table(name = TABLE_NAME,
+        uniqueConstraints = arrayOf(
+                UniqueConstraint(columnNames = arrayOf(GitHubRepositoryJpa.ID_NAME, "shaId"))
+        )
+)
 data class GitHubCommitJpa(
 
         @Id
@@ -36,7 +41,7 @@ data class GitHubCommitJpa(
         val committer: UserJpa, // person who committed the changes
 
         @ManyToOne
-        @JoinColumn(name = "repository_id")
+        @JoinColumn(name = GitHubRepositoryJpa.ID_NAME)
         val repository: GitHubRepositoryJpa,
 
         @NotNull

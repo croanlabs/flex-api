@@ -1,6 +1,6 @@
 package ie.reflexivity.flexer.flexapi.scrapers.github
 
-import ie.reflexivity.flexer.flexapi.CleanDatabase
+import ie.reflexivity.flexer.flexapi.FlexIntegrationTest
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.GitHubCommitJpaRepository
@@ -14,14 +14,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.kohsuke.github.GitHub
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.test.context.junit4.SpringRunner
 import javax.inject.Inject
 
 @RunWith(SpringRunner::class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@CleanDatabase
+@FlexIntegrationTest
 class GitHubRepositoryScraperImplITest {
 
     @Inject lateinit var projectJpaRepository: ProjectJpaRepository
@@ -58,6 +55,5 @@ class GitHubRepositoryScraperImplITest {
         assertThat(gitHubIssuesJpaRepository.findAll().size).isGreaterThan(0)
         assertThat(userJpaRepository.findAll().size).isGreaterThan(0)
     }
-
 
 }

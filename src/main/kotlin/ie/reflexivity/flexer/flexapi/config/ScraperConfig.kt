@@ -17,10 +17,4 @@ class ScraperConfig {
             .withAbuseLimitHandler(AbuseLimitErrorHandler())
             .withRateLimitHandler(RateLimitErrorHandler())
             .build()
-
-
-//    @Bean
-//    fun gitHub2() = GitHub.connect(gitHubCredentials.username, gitHubCredentials.token)
-
-
 }

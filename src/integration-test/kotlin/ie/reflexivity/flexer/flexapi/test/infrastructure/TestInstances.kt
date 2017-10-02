@@ -4,6 +4,7 @@ import ie.reflexivity.flexer.flexapi.db.domain.GitHubCommitJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubIssueJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubOrganisationJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa
+import ie.reflexivity.flexer.flexapi.db.domain.GitHubState
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubState.OPEN
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.domain.UserJpa
@@ -73,13 +74,19 @@ fun GitHubCommitJpa.Companion.testInstance(repository: GitHubRepositoryJpa, auth
         commitDate = LocalDateTime.now()
 )
 
-fun GitHubIssueJpa.Companion.testInstance(gitHubRepositoryJpa: GitHubRepositoryJpa, creator: UserJpa) =
+fun GitHubIssueJpa.Companion.testInstance(gitHubRepository: GitHubRepositoryJpa,
+                                          creator: UserJpa,
+                                          state: GitHubState = OPEN,
+                                          createdOn: LocalDateTime = LocalDateTime.now().minusDays(2),
+                                          gitHubId: Int = 100,
+                                          closedOn: LocalDateTime = LocalDateTime.now()
+) =
         GitHubIssueJpa(
-                repository = gitHubRepositoryJpa,
+                repository = gitHubRepository,
                 createdBy = creator,
-                gitHubId = 100,
-                state = OPEN,
-                createdOn = LocalDateTime.now().minusDays(2),
-                closedOn = LocalDateTime.now(),
+                gitHubId = gitHubId,
+                state = state,
+                createdOn = createdOn,
+                closedOn = closedOn,
                 closedBy = creator
         )

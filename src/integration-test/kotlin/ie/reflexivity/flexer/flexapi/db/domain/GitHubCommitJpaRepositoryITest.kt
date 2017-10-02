@@ -27,23 +27,39 @@ class GitHubCommitJpaRepositoryITest {
         val repositoryJpa = createRepository()
         val user = userRepository.save(UserJpa.testInstance())
         val firstCommit = GitHubCommitJpa.testInstance(repository = repositoryJpa,
-                authorAndCommitter = user).copy(lastModified = LocalDateTime.now().minusDays(1))
+                authorAndCommitter = user).copy(commitDate = LocalDateTime.now().minusDays(1))
         val lastCommit = GitHubCommitJpa.testInstance(repository = repositoryJpa,
-                authorAndCommitter = user).copy(lastModified = LocalDateTime.now())
+                authorAndCommitter = user).copy(commitDate = LocalDateTime.now(), shaId = "anySha2")
         gitHubCommitJpaRepository.save(firstCommit)
         val expectedResult = gitHubCommitJpaRepository.save(lastCommit)
 
-        val result = gitHubCommitJpaRepository.findFirstByRepositoryOrderByLastModifiedDesc(repositoryJpa)
+        val result = gitHubCommitJpaRepository.findFirstByRepositoryOrderByCommitDateDesc(repositoryJpa)
 
         assertThat(result).isNotNull()
         assertThat(result).isEqualTo(expectedResult)
     }
 
     @Test
+    fun `Given a saved commit When fetching the commit by shaId Then we expect the last commit to be returned`() {
+        val repositoryJpa = createRepository()
+        val shaId = "shaId"
+        val user = userRepository.save(UserJpa.testInstance())
+        val firstCommit = GitHubCommitJpa.testInstance(repository = repositoryJpa,
+                authorAndCommitter = user).copy(shaId = shaId)
+        gitHubCommitJpaRepository.save(firstCommit)
+
+        val result = gitHubCommitJpaRepository.existsByRepositoryAndShaId(repositoryJpa, shaId)
+
+        assertThat(result).isNotNull()
+        assertThat(result).isEqualTo(true)
+    }
+
+
+    @Test
     fun `Given repository with no commits When fetching the last commit Then null to be returned`() {
         val repositoryJpa = createRepository()
 
-        val result = gitHubCommitJpaRepository.findFirstByRepositoryOrderByLastModifiedDesc(repositoryJpa)
+        val result = gitHubCommitJpaRepository.findFirstByRepositoryOrderByCommitDateDesc(repositoryJpa)
 
         assertThat(result).isNull()
     }
