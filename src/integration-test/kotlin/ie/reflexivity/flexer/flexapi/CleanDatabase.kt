@@ -26,7 +26,7 @@ class CleanUpDatabaseExecutionListener : AbstractTestExecutionListener() {
         val app = testContext.applicationContext
         val springLiquibase = app.getBean(SpringLiquibase::class.java)
         springLiquibase.isDropFirst = true
-        springLiquibase.afterPropertiesSet() //The database get recreated here
+        springLiquibase.afterPropertiesSet() // The database get recreated here
     }
 
 }

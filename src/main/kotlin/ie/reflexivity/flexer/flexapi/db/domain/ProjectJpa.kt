@@ -55,6 +55,8 @@ data class ProjectJpa(
 
         val gitHubLastScrapeRun: LocalDateTime? = null,
 
+        val subreddit: String? = null,
+
         @UpdateTimestamp
         val lastModified: LocalDateTime = LocalDateTime.now()
 

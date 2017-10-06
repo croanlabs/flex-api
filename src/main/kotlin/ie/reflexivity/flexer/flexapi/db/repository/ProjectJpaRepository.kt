@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ProjectJpaRepository : JpaRepository<ProjectJpa, Long> {
 
-    fun findOneByProjectType(projectType: ProjectType) : ProjectJpa?
+    fun findOneByProjectType(projectType: ProjectType): ProjectJpa?
+
+    fun findOneBySubreddit(subreddit: String): ProjectJpa?
 
 }

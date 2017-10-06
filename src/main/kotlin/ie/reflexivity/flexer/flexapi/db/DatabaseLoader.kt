@@ -3,18 +3,7 @@ package ie.reflexivity.flexer.flexapi.db
 import ie.reflexivity.flexer.flexapi.SpringProfiles
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
-import ie.reflexivity.flexer.flexapi.model.ProjectType.ARAGON
-import ie.reflexivity.flexer.flexapi.model.ProjectType.EOS
-import ie.reflexivity.flexer.flexapi.model.ProjectType.ETHERUM
-import ie.reflexivity.flexer.flexapi.model.ProjectType.FILE_COIN
-import ie.reflexivity.flexer.flexapi.model.ProjectType.GOLEM
-import ie.reflexivity.flexer.flexapi.model.ProjectType.HUMANIG
-import ie.reflexivity.flexer.flexapi.model.ProjectType.IOTA
-import ie.reflexivity.flexer.flexapi.model.ProjectType.IPFS
 import ie.reflexivity.flexer.flexapi.model.ProjectType.MELON_PORT
-import ie.reflexivity.flexer.flexapi.model.ProjectType.NEM
-import ie.reflexivity.flexer.flexapi.model.ProjectType.STEEM
-import ie.reflexivity.flexer.flexapi.model.ProjectType.TEZOS
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
@@ -22,7 +11,7 @@ import org.springframework.stereotype.Component
 import javax.transaction.Transactional
 
 @Component
-@Profile("!" + SpringProfiles.TEST_PROFILE)
+@Profile(SpringProfiles.NOT_TEST_PROFILE)
 class ApplicationEventListener(
         private val projectJpaRepository: ProjectJpaRepository
 ) {
@@ -35,6 +24,16 @@ class ApplicationEventListener(
     @Transactional
     private fun createProjectStaticData() {
 
+        val melonPort = ProjectJpa(
+                projectType = MELON_PORT,
+                projectHomePage = "https@//github.com/melonproject",
+                githubUrl = "https://github.com/melonproject",
+                gitHubOrganisation = "melonproject",
+                subreddit = "melonproject"
+        )
+        createProjectIfDoesntExist(melonPort)
+
+        /*
         val golemProject = ProjectJpa(
                 projectType = GOLEM,
                 projectHomePage = "https://golem.network/",
@@ -42,15 +41,6 @@ class ApplicationEventListener(
                 gitHubRepository = "golemfactory/golem"
         )
         createProjectIfDoesntExist(golemProject)
-
-
-        val melonPort = ProjectJpa(
-                projectType = MELON_PORT,
-                projectHomePage = "https@//github.com/melonproject",
-                githubUrl = "https://github.com/melonproject",
-                gitHubOrganisation = "melonproject"
-        )
-        createProjectIfDoesntExist(melonPort)
 
         val tezusProject = ProjectJpa(
                 projectType = TEZOS,
@@ -131,7 +121,7 @@ class ApplicationEventListener(
                 gitHubOrganisation = "iotaledger"
         )
         createProjectIfDoesntExist(iotaProject)
-
+*/
     }
 
     private fun createProjectIfDoesntExist(projectJpa: ProjectJpa) =

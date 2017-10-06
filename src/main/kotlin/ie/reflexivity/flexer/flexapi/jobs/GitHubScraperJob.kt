@@ -12,7 +12,7 @@ import javax.inject.Inject
 private const val ONE_HOUR_AND_ONE_MIN = 1000L * 60L * 61
 
 @Component
-@Profile("!" + SpringProfiles.TEST_PROFILE)
+@Profile(SpringProfiles.CLOUD)
 class GitHubScraperJob {
 
     @Inject lateinit var gitHubScraper: GitHubScraper

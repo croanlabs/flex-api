@@ -2,6 +2,7 @@ package ie.reflexivity.flexer.flexapi.extensions
 
 import ie.reflexivity.flexer.flexapi.client.github.GIT_HUB_DATE_TIME_FORMAT
 import java.time.Duration
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -30,4 +31,6 @@ fun LocalDateTime.toGitHubFormat(): String {
     val formatter = DateTimeFormatter.ofPattern(GIT_HUB_DATE_TIME_FORMAT)
     return this.format(formatter)
 }
+
+fun Long.toDateTime() = LocalDateTime.ofInstant(Instant.ofEpochSecond(this), ZoneId.systemDefault())
 

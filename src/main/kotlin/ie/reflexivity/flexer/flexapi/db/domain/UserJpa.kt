@@ -8,6 +8,8 @@ import ie.reflexivity.flexer.flexapi.model.Platform.GIT_HUB
 import java.io.Serializable
 import java.time.LocalDateTime
 import javax.persistence.Column
+import javax.persistence.Embeddable
+import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
@@ -65,7 +67,10 @@ data class UserJpa(
 
         val gitHubPublicGistCount: Int = 0,
 
-        val gitHubPublicRepoCount: Int = 0
+        val gitHubPublicRepoCount: Int = 0,
+
+        @Embedded
+        val redditUserData: RedditUserData? = RedditUserData()
 
 ) {
     companion object {
@@ -148,3 +153,9 @@ data class UserId(
             .add("platform", platform)
             .toString()
 }
+
+@Embeddable
+data class RedditUserData(
+        val comment_karma: Int? = 0,
+        val link_karma: Int? = 0
+)
