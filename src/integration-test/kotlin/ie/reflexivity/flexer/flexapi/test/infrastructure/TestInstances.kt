@@ -7,7 +7,10 @@ import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubState
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubState.OPEN
 import ie.reflexivity.flexer.flexapi.db.domain.ProjectJpa
+import ie.reflexivity.flexer.flexapi.db.domain.SubredditJpa
+import ie.reflexivity.flexer.flexapi.db.domain.SubredditPostJpa
 import ie.reflexivity.flexer.flexapi.db.domain.UserJpa
+import ie.reflexivity.flexer.flexapi.model.Platform
 import ie.reflexivity.flexer.flexapi.model.Platform.GIT_HUB
 import ie.reflexivity.flexer.flexapi.model.ProjectType.ETHERUM
 import java.time.LocalDateTime
@@ -39,11 +42,11 @@ fun ProjectJpa.Companion.testInstance(users: MutableSet<UserJpa> = mutableSetOf(
                 users = users
         )
 
-fun UserJpa.Companion.testInstance() =
+fun UserJpa.Companion.testInstance(platform: Platform = GIT_HUB) =
         UserJpa(
                 platformId = "1234",
                 platformUserId = "anyPlatformId",
-                platform = GIT_HUB,
+                platform = platform,
                 email = "anyEmail",
                 name = "anyName",
                 location = "anyLocation",
@@ -64,8 +67,10 @@ fun GitHubRepositoryJpa.Companion.testIntance(projectJpa: ProjectJpa = ProjectJp
                 openIssuesCount = 100
         )
 
-fun GitHubCommitJpa.Companion.testInstance(repository: GitHubRepositoryJpa, authorAndCommitter: UserJpa = UserJpa.testInstance())
-        = GitHubCommitJpa(
+fun GitHubCommitJpa.Companion.testInstance(
+        repository: GitHubRepositoryJpa,
+        authorAndCommitter: UserJpa = UserJpa.testInstance()
+) = GitHubCommitJpa(
         author = authorAndCommitter,
         committer = authorAndCommitter,
         repository = repository,
@@ -80,13 +85,41 @@ fun GitHubIssueJpa.Companion.testInstance(gitHubRepository: GitHubRepositoryJpa,
                                           createdOn: LocalDateTime = LocalDateTime.now().minusDays(2),
                                           gitHubId: Int = 100,
                                           closedOn: LocalDateTime = LocalDateTime.now()
-) =
-        GitHubIssueJpa(
-                repository = gitHubRepository,
-                createdBy = creator,
-                gitHubId = gitHubId,
-                state = state,
-                createdOn = createdOn,
-                closedOn = closedOn,
-                closedBy = creator
+) = GitHubIssueJpa(
+        repository = gitHubRepository,
+        createdBy = creator,
+        gitHubId = gitHubId,
+        state = state,
+        createdOn = createdOn,
+        closedOn = closedOn,
+        closedBy = creator
+)
+
+fun SubredditJpa.Companion.testInstance(project: ProjectJpa) =
+        SubredditJpa(
+                project = project,
+                redditId = "anyRedditId",
+                display_name = "anyDisplayName",
+                active_user_count = 100,
+                accounts_active = 100,
+                subscribers = 100,
+                created = LocalDateTime.now()
+        )
+
+fun SubredditPostJpa.Companion.testInstance(subredditJpa: SubredditJpa, author: UserJpa) =
+        SubredditPostJpa(
+                subreddit = subredditJpa,
+                author = author,
+                domain = "anyDomain.com",
+                postId = "anyPostId",
+                title = "anyTitle",
+                url = "anyUrl",
+                created = LocalDateTime.now(),
+                subredditName = "anySubredditName",
+                name = "anyName",
+                view_count = 100,
+                num_crossposts = 100,
+                score = 100,
+                ups = 100,
+                num_comments = 100
         )

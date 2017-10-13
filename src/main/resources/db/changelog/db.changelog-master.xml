@@ -264,6 +264,110 @@
         <addForeignKeyConstraint baseColumnNames="repository_id" baseTableName="git_hub_issue" constraintName="FKoqk8euiwbf0putjvv4vsao8a6" deferrable="false" initiallyDeferred="false" referencedColumnNames="git_hub_repository_id" referencedTableName="git_hub_repository" />
     </changeSet>
 
+    <changeSet author="j_bax (generated)" id="1507839351921-1">
+        <createSequence sequenceName="subreddit_post_sequence" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-2">
+        <createSequence sequenceName="subreddit_sequence" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-3">
+        <createTable tableName="subreddit">
+            <column name="subreddit_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="accounts_active" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="active_user_count" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="created" type="TIMESTAMP" />
+            <column name="display_name" type="VARCHAR(255)" />
+            <column name="last_modified" type="TIMESTAMP" />
+            <column name="reddit_id" type="VARCHAR(255)" />
+            <column name="subscribers" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="project_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-4">
+        <createTable tableName="subreddit_post">
+            <column name="subreddit_post_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="created" type="TIMESTAMP" />
+            <column name="domain" type="VARCHAR(255)" />
+            <column name="last_modified" type="TIMESTAMP" />
+            <column name="name" type="VARCHAR(255)" />
+            <column name="num_comments" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="num_crossposts" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="post_id" type="VARCHAR(255)" />
+            <column name="score" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="subreddit_name" type="VARCHAR(255)" />
+            <column name="title" type="VARCHAR(255)" />
+            <column name="ups" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="url" type="VARCHAR(255)" />
+            <column name="view_count" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="author_platform" type="VARCHAR(255)" />
+            <column name="author_id" type="VARCHAR(70)" />
+            <column name="subreddit_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-5">
+        <addColumn tableName="user">
+            <column name="comment_karma" type="integer" />
+        </addColumn>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-6">
+        <addColumn tableName="user">
+            <column name="link_karma" type="integer" />
+        </addColumn>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-7">
+        <addColumn tableName="project">
+            <column name="subreddit" type="varchar(255)" />
+        </addColumn>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-8">
+        <addPrimaryKey columnNames="subreddit_id" constraintName="subredditPK" tableName="subreddit" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-9">
+        <addPrimaryKey columnNames="subreddit_post_id" constraintName="subreddit_postPK" tableName="subreddit_post" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-10">
+        <addUniqueConstraint columnNames="reddit_id" constraintName="UC_SUBREDDITREDDIT_ID_COL" tableName="subreddit" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-11">
+        <addUniqueConstraint columnNames="reddit_internal_post_id" constraintName="UC_SUBREDDIT_POSTREDDIT_INTERNAL_POST_ID_COL" tableName="subreddit_post" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-12">
+        <addUniqueConstraint columnNames="project_id" constraintName="UK_rb8ahqkoja4phw2e5yvlkkcku" tableName="subreddit" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-13">
+        <addForeignKeyConstraint baseColumnNames="author_platform,author_id" baseTableName="subreddit_post" constraintName="FKekb1w9727iyff9glhyl1mvfjd" deferrable="false" initiallyDeferred="false" referencedColumnNames="platform,platform_user_id" referencedTableName="user" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-14">
+        <addForeignKeyConstraint baseColumnNames="subreddit_id" baseTableName="subreddit_post" constraintName="FKffu42e2itwl04pr75pvpj1re8" deferrable="false" initiallyDeferred="false" referencedColumnNames="subreddit_id" referencedTableName="subreddit" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507839351921-15">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="subreddit" constraintName="FKmwbh1lbbq27n8gy1fujwubd9n" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project" />
+    </changeSet>
+
     <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql" runAlways="true">
         <sql>
             GRANT USAGE ON SCHEMA flex_admin to flex_app;

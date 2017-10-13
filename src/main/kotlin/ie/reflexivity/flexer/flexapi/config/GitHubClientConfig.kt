@@ -1,9 +1,13 @@
-package ie.reflexivity.flexer.flexapi.client.github
+package ie.reflexivity.flexer.flexapi.config
 
 import com.google.gson.GsonBuilder
+import ie.reflexivity.flexer.flexapi.client.github.GIT_HUB_DATE_TIME_FORMAT
+import ie.reflexivity.flexer.flexapi.client.github.GitHubStateConverter
+import ie.reflexivity.flexer.flexapi.client.github.GsonDateTimeConverter
+import ie.reflexivity.flexer.flexapi.client.github.OAuthTokenInterceptor
+import ie.reflexivity.flexer.flexapi.client.github.RateLimitInterceptor
 import ie.reflexivity.flexer.flexapi.client.github.api.GitHubIssueApiService
 import ie.reflexivity.flexer.flexapi.client.github.api.GitHubUserApiService
-import ie.reflexivity.flexer.flexapi.config.GithubCredentials
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubState
 import okhttp3.OkHttpClient
 import org.springframework.context.annotation.Bean
