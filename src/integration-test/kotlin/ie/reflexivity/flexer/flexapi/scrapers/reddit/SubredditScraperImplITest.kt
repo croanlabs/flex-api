@@ -28,5 +28,4 @@ class SubredditScraperImplITest {
         assertThat(subredditJpaRepository.findAll().size).isEqualTo(1)
     }
 
-
 }
