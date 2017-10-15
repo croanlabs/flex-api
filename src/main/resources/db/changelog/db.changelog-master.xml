@@ -362,6 +362,69 @@
         <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="subreddit" constraintName="FKmwbh1lbbq27n8gy1fujwubd9n" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project" />
     </changeSet>
 
+    <changeSet id="2017-10-15 Insert base data" author="j_bax" dbms="postgresql" context="prod">
+        <sql>
+            insert into project(PROJECT_ID,PROJECT_TYPE,PROJECT_HOME_PAGE,GITHUB_URL,GIT_HUB_ORGANISATION,SUBREDDIT)
+            values(nextval('project_sequence'),'MELON_PORT','https@//github.com/melonproject','https://github.com/melonproject',
+            'melonproject','melonproject');
+
+            insert into
+            project(PROJECT_ID,PROJECT_TYPE,PROJECT_HOME_PAGE,GITHUB_URL,GIT_HUB_ORGANISATION,GIT_HUB_REPOSITORY,SUBREDDIT)
+            values(nextval('project_sequence'),'GOLEM','https://golem.network/','https://github.com/golemfactory/golem',null,
+            'golemfactory/golem','GolemProject');
+
+            insert into
+            project(PROJECT_ID,PROJECT_TYPE,PROJECT_HOME_PAGE,GITHUB_URL,GIT_HUB_ORGANISATION,GIT_HUB_REPOSITORY,SUBREDDIT)
+            values(nextval('project_sequence'),'TEZOS','https://www.tezos.com/','https://github.com/tezos/tezos',null,
+            'tezos/tezos','tezos');
+
+            insert into
+            project(PROJECT_ID,PROJECT_TYPE,PROJECT_HOME_PAGE,GITHUB_URL,GIT_HUB_ORGANISATION,GIT_HUB_REPOSITORY,SUBREDDIT)
+            values(nextval('project_sequence'),'IPFS','https://github.com/ipfs','https://github.com/ipfs','ipfs',
+            null,'ipfs');
+
+            insert into
+            project(PROJECT_ID,PROJECT_TYPE,PROJECT_HOME_PAGE,GITHUB_URL,GIT_HUB_ORGANISATION,GIT_HUB_REPOSITORY,SUBREDDIT)
+            values(nextval('project_sequence'),'ETHERUM','https://ethereum.org/','https://github.com/ethereum/','ethereum',
+            null,'ethereum');
+
+            insert into
+            project(PROJECT_ID,PROJECT_TYPE,PROJECT_HOME_PAGE,GITHUB_URL,GIT_HUB_ORGANISATION,GIT_HUB_REPOSITORY,SUBREDDIT)
+            values(nextval('project_sequence'),'EOS','https://eos.io/','http://github.com/eosio','eosio', null,'eos');
+
+            insert into
+            project(PROJECT_ID,PROJECT_TYPE,PROJECT_HOME_PAGE,GITHUB_URL,GIT_HUB_ORGANISATION,GIT_HUB_REPOSITORY,SUBREDDIT)
+            values(nextval('project_sequence'),'ARAGON','https://aragon.one/','https://github.com/aragon','aragon',
+            null,'aragonproject');
+
+            insert into
+            project(PROJECT_ID,PROJECT_TYPE,PROJECT_HOME_PAGE,GITHUB_URL,GIT_HUB_ORGANISATION,GIT_HUB_REPOSITORY,SUBREDDIT)
+            values(nextval('project_sequence'),'FILE_COIN','https://github.com/protocol','https://github.com/protocol','protocol',
+            null,'filecoin');
+
+            insert into
+            project(PROJECT_ID,PROJECT_TYPE,PROJECT_HOME_PAGE,GITHUB_URL,GIT_HUB_ORGANISATION,GIT_HUB_REPOSITORY,SUBREDDIT)
+            values(nextval('project_sequence'),'HUMANIG','https://humaniq.com/','https://github.com/humaniq','humaniq',
+            null,'Humaniq');
+
+            insert into
+            project(PROJECT_ID,PROJECT_TYPE,PROJECT_HOME_PAGE,GITHUB_URL,GIT_HUB_ORGANISATION,GIT_HUB_REPOSITORY,SUBREDDIT)
+            values(nextval('project_sequence'),'STEEM','https://steem.io/','http://github.com/steemit','steemit',
+            null,'steemit');
+
+            insert into
+            project(PROJECT_ID,PROJECT_TYPE,PROJECT_HOME_PAGE,GITHUB_URL,GIT_HUB_ORGANISATION,GIT_HUB_REPOSITORY,SUBREDDIT)
+            values(nextval('project_sequence'),'NEM','https://www.nem.io/','https://github.com/NemProject','NemProject',
+            null,'nem');
+
+            insert into
+            project(PROJECT_ID,PROJECT_TYPE,PROJECT_HOME_PAGE,GITHUB_URL,GIT_HUB_ORGANISATION,GIT_HUB_REPOSITORY,SUBREDDIT)
+            values(nextval('project_sequence'),'IOTA','https://iota.org/','https://github.com/iotaledger','iotaledger',
+            null,'Iota');
+
+        </sql>
+    </changeSet>
+
     <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql" runAlways="true">
         <sql>
             GRANT USAGE ON SCHEMA flex_admin to flex_app;

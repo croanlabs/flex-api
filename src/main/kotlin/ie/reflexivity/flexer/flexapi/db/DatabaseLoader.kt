@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 import javax.transaction.Transactional
 
 @Component
-@Profile(SpringProfiles.NOT_TEST_PROFILE)
+@Profile(SpringProfiles.DEV_PROFILE, SpringProfiles.LOCAL_DOCKER_CLOUD)
 class ApplicationEventListener(
         private val projectJpaRepository: ProjectJpaRepository
 ) {
@@ -84,7 +84,7 @@ class ApplicationEventListener(
 
         val fileCoinProject = ProjectJpa(
                 projectType = FILE_COIN,
-                projectHomePage = "https://github.com/protocol",
+                projectHomePage = "https://protocol.ai/",
                 githubUrl = "https://github.com/protocol",
                 gitHubOrganisation = "protocol"
         )

@@ -7,6 +7,9 @@ spring:
     jpa:
         show-sql: false
 
+liquibase:
+    contexts: dev
+
 github:
    username: lovelyliatroim
    token: dce4b8ad10dad49a0b1b3f9da6b64cfbfaf401e3
