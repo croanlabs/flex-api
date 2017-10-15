@@ -121,6 +121,6 @@ fun GitHubIssue.toGitHubIssueJpa(gitHubRepositoryJpa: GitHubRepositoryJpa, creat
                 closedOn = closed_at,
                 createdBy = createdBy,
                 state = state,
-                title = title,
+                title = title.shortenToDBMaxAllowedSize(),
                 closedBy = closedBy
         )
