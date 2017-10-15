@@ -2,11 +2,13 @@ package ie.reflexivity.flexer.flexapi.db.domain
 
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
 import ie.reflexivity.flexer.flexapi.db.repository.UserJpaRepository
+import ie.reflexivity.flexer.flexapi.model.Platform.GIT_HUB
 import ie.reflexivity.flexer.flexapi.model.Platform.REDDIT
 import ie.reflexivity.flexer.flexapi.test.infrastructure.testInstance
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.junit4.SpringRunner
 import javax.inject.Inject
 
@@ -51,6 +53,41 @@ class UserJpaRepositoryITest {
         assertThat(result).isNotNull()
         assertThat(result).isEqualTo(result)
     }
+
+    @Test
+    fun `Given a user on a platform When searching by platform Then platform user should be returned `() {
+        val savedUser = userJpaRepository.save(UserJpa.testInstance())
+
+        val result = userJpaRepository.findByPlatform(savedUser.platform, PageRequest(0, 2))
+
+        assertThat(result).isNotNull()
+        assertThat(result.elementAt(0)).isEqualTo(savedUser)
+    }
+
+    @Test
+    fun `Given two different platform users When searching by platform Then only the platform user should be returned `() {
+        val redditUser = userJpaRepository.save(UserJpa.testInstance(platform = REDDIT))
+        userJpaRepository.save(UserJpa.testInstance(platform = GIT_HUB))
+
+        val result = userJpaRepository.findByPlatform(REDDIT, PageRequest(0, 2))
+
+        assertThat(result).isNotNull()
+        assertThat(result.totalElements).isEqualTo(1)
+        assertThat(result.elementAt(0)).isEqualTo(redditUser)
+    }
+
+    @Test
+    fun `Given two platform users When searching by platform Then only the platform user should be returned `() {
+        userJpaRepository.save(UserJpa.testInstance(platform = REDDIT).copy(platformUserId = "reddit1"))
+        userJpaRepository.save(UserJpa.testInstance(platform = REDDIT).copy(platformUserId = "reddit2"))
+        userJpaRepository.save(UserJpa.testInstance(platform = REDDIT).copy(platformUserId = "reddit3"))
+
+        val result = userJpaRepository.findByPlatform(REDDIT, PageRequest(0, 1))
+
+        assertThat(result.totalPages).isEqualTo(3)
+        assertThat(result.hasNext()).isEqualTo(true)
+    }
+
 
     private fun createProjectWithUser(): ProjectJpa {
         val projectJpa = projectJpaRepository.save(ProjectJpa.testInstance())

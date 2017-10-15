@@ -352,9 +352,6 @@
     <changeSet author="j_bax (generated)" id="1507839351921-10">
         <addUniqueConstraint columnNames="reddit_id" constraintName="UC_SUBREDDITREDDIT_ID_COL" tableName="subreddit" />
     </changeSet>
-    <changeSet author="j_bax (generated)" id="1507839351921-11">
-        <addUniqueConstraint columnNames="reddit_internal_post_id" constraintName="UC_SUBREDDIT_POSTREDDIT_INTERNAL_POST_ID_COL" tableName="subreddit_post" />
-    </changeSet>
     <changeSet author="j_bax (generated)" id="1507839351921-12">
         <addUniqueConstraint columnNames="project_id" constraintName="UK_rb8ahqkoja4phw2e5yvlkkcku" tableName="subreddit" />
     </changeSet>
@@ -366,6 +363,16 @@
     </changeSet>
     <changeSet author="j_bax (generated)" id="1507839351921-15">
         <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="subreddit" constraintName="FKmwbh1lbbq27n8gy1fujwubd9n" deferrable="false" initiallyDeferred="false" referencedColumnNames="project_id" referencedTableName="project" />
+    </changeSet>
+
+    <changeSet author="j_bax (generated)" id="1507974746903-1">
+        <addUniqueConstraint columnNames="name" constraintName="UC_SUBREDDIT_POSTNAME_COL" tableName="subreddit_post" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507974746903-2">
+        <dropUniqueConstraint constraintName="UK_RB8AHQKOJA4PHW2E5YVLKKCKU" tableName="SUBREDDIT" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1507974746903-3">
+        <dropNotNullConstraint columnDataType="bigint" columnName="project_id" tableName="subreddit" />
     </changeSet>
 
     <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql" runAlways="true">

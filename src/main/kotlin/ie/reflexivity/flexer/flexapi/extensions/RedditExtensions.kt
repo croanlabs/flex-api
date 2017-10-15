@@ -10,7 +10,7 @@ import ie.reflexivity.flexer.flexapi.db.domain.SubredditPostJpa
 import ie.reflexivity.flexer.flexapi.db.domain.UserJpa
 import ie.reflexivity.flexer.flexapi.model.Platform.REDDIT
 
-fun SubredditAbout.toSubredditJpa(project: ProjectJpa) =
+fun SubredditAbout.toSubredditJpa(project: ProjectJpa? = null) =
         SubredditJpa(
                 project = project,
                 display_name = display_name,
@@ -18,7 +18,7 @@ fun SubredditAbout.toSubredditJpa(project: ProjectJpa) =
                 accounts_active = accounts_active,
                 subscribers = subscribers,
                 created = created_utc.toDateTime(),
-                redditId = id
+                redditId = name
         )
 
 fun SubredditPost.toSubredditPostJpa(subreddit: SubredditJpa, author: UserJpa) =

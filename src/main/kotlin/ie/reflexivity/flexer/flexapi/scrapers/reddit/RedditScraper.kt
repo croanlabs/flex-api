@@ -12,7 +12,9 @@ interface RedditScraper {
 @Service
 class RedditScraperImpl(
         private val projectJpaRepository: ProjectJpaRepository,
-        private val subredditScraper: SubredditScraper
+        private val subredditScraper: SubredditScraper,
+        private val redditUserPostsScraper: RedditUserPostsScraper
+
 ) : RedditScraper {
 
     private val log by logger()
@@ -21,8 +23,13 @@ class RedditScraperImpl(
         log.info("About to start reddit scraping")
         val projects = projectJpaRepository.findAll().filter { it.subreddit != null }
         projects.forEach {
-            subredditScraper.scrape(it)
+            try {
+                subredditScraper.scrape(it)
+            } catch (e: Exception) {
+                log.error("Problem occurred scraping ${it.subreddit}", e)
+            }
         }
+        redditUserPostsScraper.scrape()
     }
 
 }

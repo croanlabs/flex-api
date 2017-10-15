@@ -37,9 +37,29 @@ class ProjectJpaRepositoryITest {
         assertThat(result!!.id).isNotNull()
     }
 
-    private fun createAndSaveProject(projectType: ProjectType) {
+    @Test
+    fun `Given a project with a reddit identifier When fetching it Then the project should be returned`() {
+        val subredditId = "subredditId"
+        projectJpaRepository.save(createProject().copy(subreddit = subredditId))
+
+        val result = projectJpaRepository.findOneBySubreddit(subredditId)
+
+        assertThat(result).isNotNull()
+    }
+
+    @Test
+    fun `Given a project without a reddit identifier When fetching it Then null should be returned`() {
+        val subredditId = "IDontExist"
+        projectJpaRepository.save(createProject())
+
+        val result = projectJpaRepository.findOneBySubreddit(subredditId)
+
+        assertThat(result).isNull()
+    }
+
+    private fun createAndSaveProject(projectType: ProjectType): ProjectJpa {
         val project = createProject().copy(projectType = projectType)
-        projectJpaRepository.save(project)
+        return projectJpaRepository.save(project)
     }
 
     private fun createProject(): ProjectJpa {
@@ -51,6 +71,5 @@ class ProjectJpaRepositoryITest {
         )
         return projectJpa
     }
-
 
 }

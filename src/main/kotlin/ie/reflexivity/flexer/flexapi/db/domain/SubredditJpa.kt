@@ -26,8 +26,8 @@ data class SubredditJpa(
         val id: Long = 0,
 
         @JoinColumn(name = ProjectJpa.ID_NAME)
-        @OneToOne(optional = false, fetch = FetchType.LAZY)
-        val project: ProjectJpa,
+        @OneToOne(optional = true, fetch = FetchType.LAZY)
+        val project: ProjectJpa? = null,
 
         @Column(unique = true)
         val redditId: String, // couldnt call subredditId due to table name id conflict

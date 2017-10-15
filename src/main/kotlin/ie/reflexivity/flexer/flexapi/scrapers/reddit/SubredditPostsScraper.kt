@@ -24,7 +24,6 @@ class SubredditPostsScraperImpl(
         private val subredditPostJpaRepository: SubredditPostJpaRepository,
         private val subredditUserApi: SubredditUserApi,
         private val userJpaRepository: UserJpaRepository
-
 ) : SubredditPostsScraper {
 
     private val log by logger()
@@ -32,13 +31,13 @@ class SubredditPostsScraperImpl(
     override fun scrape(subreddit: String, subredditJpa: SubredditJpa) {
         log.debug("Scraping subbreddit ${subreddit}")
         var hasPages = true
-        var nextPageTag: String? = null
+        var redditNextPageTag: String? = null
         var pageCount = 0
         while (hasPages) {
             pageCount++
-            val response = subredditApi.fetchSubredditPosts(subreddit, after = nextPageTag).execute()
+            val response = subredditApi.fetchSubredditPosts(subreddit, after = redditNextPageTag).execute()
             val subredditListing = response.body()
-            nextPageTag = subredditListing!!.data.after
+            redditNextPageTag = subredditListing!!.data.after
             subredditListing.data.children.forEach { postListing ->
                 val post = postListing.data
                 val userJpa = createOrFetchUser(post.author)
@@ -50,8 +49,8 @@ class SubredditPostsScraperImpl(
                     subredditPostJpaRepository.save(redditPostJpa.copy(id = existingPost.id))
                 }
             }
-            log.debug("Scraping pageNo=$pageCount of subbreddit ${subreddit} nextPageTag=$nextPageTag")
-            if (nextPageTag == null) {
+            log.debug("Scraping pageNo=$pageCount of subbreddit ${subreddit} nextPageTag=$redditNextPageTag")
+            if (redditNextPageTag == null) {
                 hasPages = false
             }
             subredditPostJpaRepository.flush()

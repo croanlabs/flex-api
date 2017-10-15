@@ -52,7 +52,8 @@ data class SubredditAbout(
         val active_user_count: Int,
         val accounts_active: Int,
         val subscribers: Int,
-        val created_utc: Long
+        val created_utc: Long,
+        val name: String // actually real unique id in reddit.
 )
 
 data class SubredditUser(
