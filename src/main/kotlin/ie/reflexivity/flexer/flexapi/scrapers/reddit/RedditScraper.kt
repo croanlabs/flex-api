@@ -3,6 +3,7 @@ package ie.reflexivity.flexer.flexapi.scrapers.reddit
 import ie.reflexivity.flexer.flexapi.db.repository.ProjectJpaRepository
 import ie.reflexivity.flexer.flexapi.logger
 import org.springframework.stereotype.Service
+import org.springframework.util.StopWatch
 
 
 interface RedditScraper {
@@ -21,6 +22,8 @@ class RedditScraperImpl(
 
     override fun scrape() {
         log.info("About to start reddit scraping")
+        val stopWatch = StopWatch()
+        stopWatch.start()
         val projects = projectJpaRepository.findAll().filter { it.subreddit != null }
         projects.forEach {
             try {
@@ -30,6 +33,8 @@ class RedditScraperImpl(
             }
         }
         redditUserPostsScraper.scrape()
+        stopWatch.stop()
+        log.info("Finished reddit Scraping data. ${stopWatch.shortSummary()} TotalSecs = ${stopWatch.totalTimeSeconds}")
     }
 
 }

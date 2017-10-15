@@ -46,10 +46,14 @@ spring:
 liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.xml
 
+logging:
+  level:
+     ie.reflexivity.flexer.flexapi: DEBUG
+
 github:
    username: theseathesea
    token: 42f00480e6fe19686585694f6746b4f519a5c23f
 
-logging:
-  level:
-     ie.reflexivity.flexer.flexapi: DEBUG
+reddit:
+  username: _3QgWk2uSnqcmw
+  token: jrIEieleMKPsvSnGULQXsOuEVE4

@@ -38,6 +38,7 @@ class RedditUserPostsScraperImpl(
             page = page.next()
             log.debug("Current scraping all users and next page is $page and hasMorePages=$hasMoreUserPages")
         }
+        log.info("Finished reddit user posts scraping")
     }
 
     private fun scrapeUserPosts(user: UserJpa) {
@@ -59,7 +60,7 @@ class RedditUserPostsScraperImpl(
                     subredditPostJpaRepository.save(redditPostJpa)
                 }
             }
-            log.debug("Scraping pageNo=$pageCount of user subbreddit posts ${user.platformId} nextPageTag=$redditNextPageTag")
+            log.debug("Scraping pageNo=$pageCount of user subbreddit posts ${user.platformUserId} nextPageTag=$redditNextPageTag")
             if (redditNextPageTag == null) {
                 hasPages = false
             }

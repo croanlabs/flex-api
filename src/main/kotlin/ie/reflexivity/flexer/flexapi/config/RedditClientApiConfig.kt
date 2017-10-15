@@ -6,6 +6,7 @@ import ie.reflexivity.flexer.flexapi.client.reddit.RedditOAuthInterceptor
 import ie.reflexivity.flexer.flexapi.client.reddit.api.SubredditApi
 import ie.reflexivity.flexer.flexapi.client.reddit.api.SubredditUserApi
 import okhttp3.OkHttpClient
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import retrofit2.Converter
@@ -16,6 +17,13 @@ import java.time.LocalDateTime
 @Configuration
 class RedditClientApiConfig {
 
+    @Value("\${reddit.username}")
+    var username: String? = null
+
+    @Value("\${reddit.token}")
+    var token: String? = null
+
+
     @Bean
     fun redditRetroFit(): Retrofit {
         val gson = GsonBuilder()
@@ -25,7 +33,7 @@ class RedditClientApiConfig {
 
         val okHttpClient = OkHttpClient()
                 .newBuilder()
-                .addInterceptor(RedditOAuthInterceptor())
+                .addInterceptor(RedditOAuthInterceptor(username = username!!, token = token!!))
                 .build()
 
         return Retrofit.Builder()

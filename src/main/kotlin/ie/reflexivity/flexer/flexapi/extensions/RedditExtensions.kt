@@ -24,7 +24,7 @@ fun SubredditAbout.toSubredditJpa(project: ProjectJpa? = null) =
 fun SubredditPost.toSubredditPostJpa(subreddit: SubredditJpa, author: UserJpa) =
         SubredditPostJpa(
                 domain = domain,
-                title = title,
+                title = title.substringToMaxSizeAllowed(),
                 url = url,
                 postId = name,
                 created = created_utc.toDateTime(),
@@ -49,3 +49,8 @@ fun SubredditUser.toUserJpa() =
                         comment_karma = comment_karma
                 )
         )
+
+private fun String.substringToMaxSizeAllowed(): String {
+    if (length < 255) return this
+    else return substring(0, 255)
+}

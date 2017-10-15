@@ -15,7 +15,8 @@ interface SubredditScraper {
 @Service
 class SubredditScraperImpl(
         private val subredditApi: SubredditApi,
-        private val subredditJpaRepository: SubredditJpaRepository
+        private val subredditJpaRepository: SubredditJpaRepository,
+        private val subredditPostsScraper: SubredditPostsScraper
 ) : SubredditScraper {
 
     private val log by logger()
@@ -27,9 +28,11 @@ class SubredditScraperImpl(
         val subredditJpa = redditAboutData.toSubredditJpa(project)
         val existingSubredditJpa = subredditJpaRepository.findByRedditId(subredditJpa.redditId)
         if (existingSubredditJpa == null) {
-            subredditJpaRepository.save(subredditJpa)
+            val savedSubredditJpa = subredditJpaRepository.save(subredditJpa)
+            subredditPostsScraper.scrape(project.subreddit, savedSubredditJpa)
         } else {
-            subredditJpaRepository.save(subredditJpa.copy(id = existingSubredditJpa.id))
+            val savedSubredditJpa = subredditJpaRepository.save(subredditJpa.copy(id = existingSubredditJpa.id))
+            subredditPostsScraper.scrape(project.subreddit, savedSubredditJpa)
         }
     }
 }
