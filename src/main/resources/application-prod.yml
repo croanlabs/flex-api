@@ -15,3 +15,6 @@ spring:
       properties:
         hibernate:
           default_schema: flex_admin
+
+logging:
+  file: /var/log/flex/flex-api.log

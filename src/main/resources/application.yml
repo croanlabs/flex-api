@@ -49,6 +49,9 @@ liquibase:
 logging:
   level:
      ie.reflexivity.flexer.flexapi: DEBUG
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
 github:
    username: theseathesea
