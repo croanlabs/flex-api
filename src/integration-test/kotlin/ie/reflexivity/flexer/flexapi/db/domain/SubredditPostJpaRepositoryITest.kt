@@ -39,7 +39,7 @@ class SubredditPostJpaRepositoryITest {
         val subredditJpa = subredditJpaRepository.saveAndFlush(SubredditJpa.testInstance(projectJpa))
         val expectedResult = testee.saveAndFlush(SubredditPostJpa.testInstance(author = userJpa, subredditJpa = subredditJpa))
 
-        val result = testee.findByName(expectedResult.name)
+        val result = testee.findByPostId(expectedResult.postId)
 
         assertThat(result).isEqualTo(expectedResult)
     }

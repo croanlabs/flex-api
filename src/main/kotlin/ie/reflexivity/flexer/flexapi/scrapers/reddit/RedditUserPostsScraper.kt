@@ -52,7 +52,7 @@ class RedditUserPostsScraperImpl(
             redditNextPageTag = subredditListing!!.data.after
             subredditListing.data.children.forEach { postListing ->
                 val post = postListing.data
-                val existingPost = subredditPostJpaRepository.findByName(post.name)
+                val existingPost = subredditPostJpaRepository.findByPostId(post.name)
                 if (existingPost == null) {
                     val subredditJpa = subredditService.fetchOrCreateSubreddit(post.subreddit, post.subreddit_id)
                     val redditPostJpa = post.toSubredditPostJpa(subreddit = subredditJpa, author = user)

@@ -24,10 +24,9 @@ fun SubredditAbout.toSubredditJpa(project: ProjectJpa? = null) =
 fun SubredditPost.toSubredditPostJpa(subreddit: SubredditJpa, author: UserJpa) =
         SubredditPostJpa(
                 domain = domain,
-                postId = id,
                 title = title,
                 url = url,
-                name = name,
+                postId = name,
                 created = created_utc.toDateTime(),
                 view_count = view_count,
                 num_comments = num_comments,

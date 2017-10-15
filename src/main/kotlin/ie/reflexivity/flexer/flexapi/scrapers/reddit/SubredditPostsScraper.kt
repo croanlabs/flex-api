@@ -42,7 +42,7 @@ class SubredditPostsScraperImpl(
                 val post = postListing.data
                 val userJpa = createOrFetchUser(post.author)
                 val redditPostJpa = post.toSubredditPostJpa(subreddit = subredditJpa, author = userJpa)
-                val existingPost = subredditPostJpaRepository.findByName(post.name)
+                val existingPost = subredditPostJpaRepository.findByPostId(post.name)
                 if (existingPost == null) {
                     subredditPostJpaRepository.save(redditPostJpa)
                 } else {

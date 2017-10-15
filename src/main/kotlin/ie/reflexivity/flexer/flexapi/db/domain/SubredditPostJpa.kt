@@ -38,8 +38,6 @@ data class SubredditPostJpa(
 
         val domain: String,
 
-        val postId: String,
-
         val title: String,
 
         val url: String,
@@ -47,7 +45,7 @@ data class SubredditPostJpa(
         val created: LocalDateTime,
 
         @Column(unique = true)
-        val name: String,
+        val postId: String,
 
         val subredditName: String,
 

@@ -79,7 +79,6 @@ class RedditOAuthInterceptor() : Interceptor {
     override fun intercept(chain: Chain): Response {
         if (redditToken == null || redditToken!!.isTokenExpired()) {
             redditToken = fetchRedditOauthToken()
-            //redditToken = RedditToken(access_token = "cLWZJZtvRyD5PNk3WBkRlV-pyFU", token_type = "bearer", expires_in = 3600, scope = "*")
         }
         val originalRequest = chain.request()
         val builder = originalRequest.newBuilder().header("Authorization",

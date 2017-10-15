@@ -31,7 +31,7 @@ data class SubredditPost(
         val url: String,
         val author: String,
         val created_utc: Long,
-        val name: String,
+        val name: String, // unique identifer for the post. (Reddit name for it)
         val view_count: Int,
         val num_crossposts: Int,
         val score: Int,

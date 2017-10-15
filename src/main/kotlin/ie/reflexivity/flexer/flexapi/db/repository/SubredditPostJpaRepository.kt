@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface SubredditPostJpaRepository : JpaRepository<SubredditPostJpa, Long> {
 
-    fun findByName(name: String): SubredditPostJpa?
+    fun findByPostId(postId: String): SubredditPostJpa?
 
 }
