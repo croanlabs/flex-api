@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 import javax.transaction.Transactional
 
 @Component
-@Profile("!" + SpringProfiles.TEST_PROFILE)
+@Profile(SpringProfiles.NOT_TEST_PROFILE)
 class ApplicationEventListener(
         private val projectJpaRepository: ProjectJpaRepository
 ) {
