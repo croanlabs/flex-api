@@ -59,10 +59,11 @@ executing the following command if the account is your default profile
     
     aws ecr get-login --region eu-central-1
     
-Then execute the docker login command which is produced from the output. Once you are logged in then execute the following
-
-    ./bin/docker-publish-cloud.sh tag
-
+The flex API uses the [spotify plugin](https://github.com/spotify/docker-maven-plugin) to push images to AWS.
 If you wish to just publish to your local registry only then execute 
 
-    ./bin/docker-publish-local.sh tag
+    ./mvnw -P docker clean package docker:build
+
+If you want to push to the AWS registry then execute 
+
+    ./mvnw -P docker clean package docker:build -DpushImage

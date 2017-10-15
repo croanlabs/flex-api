@@ -34,6 +34,10 @@
         <javax.inject.version>1</javax.inject.version>
         <guava.version>23.0</guava.version>
         <retrofit.version>2.3.0</retrofit.version>
+
+        <!-- Docker -->
+        <docker.registry.host>263649354763.dkr.ecr.eu-central-1.amazonaws.com</docker.registry.host>
+        <docker.registry.url>https://${docker.registry.host}</docker.registry.url>
     </properties>
 
     <dependencies>
@@ -162,6 +166,7 @@
     </dependencies>
 
     <build>
+        <finalName>flex-api</finalName>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>
@@ -297,7 +302,6 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.18.1</version>
                 <executions>
-
                     <!-- Invokes both the integration-test and the verify goals of the Failsafe Maven plugin -->
                     <execution>
                         <id>integration-tests</id>
@@ -336,6 +340,51 @@
                 <skip.integration.tests>false</skip.integration.tests>
                 <skip.unit.tests>true</skip.unit.tests>
             </properties>
+        </profile>
+        <profile>
+            <!-- Docker profile to build, tag, and push an image -->
+            <!-- Usage: mvn deploy -P docker -Dmaven.deploy.skip=true -->
+            <id>docker</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.spotify</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <configuration>
+                            <skipDockerBuild>false</skipDockerBuild>
+                            <imageName>${docker.registry.host}/flexapi</imageName>
+                            <dockerDirectory>${project.basedir}/docker</dockerDirectory>
+                            <registryUrl>${docker.registry.host}</registryUrl>
+                            <imageTags>
+                                <imageTag>${project.version}</imageTag>
+                            </imageTags>
+                            <resources>
+                                <resource>
+                                    <targetPath>/binaries</targetPath>
+                                    <directory>${project.build.directory}</directory>
+                                    <include>${project.build.finalName}.jar</include>
+                                </resource>
+                            </resources>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>build-image</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>push-image</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>push</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
