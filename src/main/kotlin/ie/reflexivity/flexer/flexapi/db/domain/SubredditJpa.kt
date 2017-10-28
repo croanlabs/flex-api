@@ -3,13 +3,17 @@ package ie.reflexivity.flexer.flexapi.db.domain
 import ie.reflexivity.flexer.flexapi.db.domain.SubredditJpa.Companion.TABLE_NAME
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
+import javax.persistence.CascadeType.ALL
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
+import javax.persistence.FetchType.EAGER
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType.SEQUENCE
 import javax.persistence.Id
 import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
 import javax.persistence.OneToOne
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
@@ -28,6 +32,12 @@ data class SubredditJpa(
         @JoinColumn(name = ProjectJpa.ID_NAME)
         @OneToOne(optional = true, fetch = FetchType.LAZY)
         val project: ProjectJpa? = null,
+
+        @ManyToMany(cascade = arrayOf(ALL), fetch = EAGER)
+        @JoinTable(name = "SUBREDDIT_MODERATORS", joinColumns = arrayOf(JoinColumn(name = SubredditJpa.ID_NAME)),
+                inverseJoinColumns = arrayOf(JoinColumn(name = "platformUserId", referencedColumnName = "platformUserId"),
+                        JoinColumn(name = "platform", referencedColumnName = "platform")))
+        val moderators: MutableSet<UserJpa> = mutableSetOf(),
 
         @Column(unique = true)
         val redditId: String, // couldnt call subredditId due to table name id conflict

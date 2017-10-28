@@ -50,7 +50,11 @@ class RedditUserPostsScraperImpl(
             pageCount++
             val response = subredditUserApi.fetchUserSubmits(user.platformUserId, after = redditNextPageTag).execute()
             val subredditListing = response.body()
-            redditNextPageTag = subredditListing!!.data.after
+            if (subredditListing?.data == null) {
+                hasPages = false
+                continue
+            }
+            redditNextPageTag = subredditListing.data.after
             subredditListing.data.children.forEach { postListing ->
                 val post = postListing.data
                 val existingPost = subredditPostJpaRepository.findByPostId(post.name)
