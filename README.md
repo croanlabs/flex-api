@@ -67,3 +67,9 @@ If you wish to just publish to your local registry only then execute
 If you want to push to the AWS registry then execute 
 
     ./mvnw -P docker clean package docker:build -DpushImage
+
+# Flex API Documentation
+
+To view the current API documentation you can view it under
+
+    http://localhost:8080/swagger-ui.html#/
