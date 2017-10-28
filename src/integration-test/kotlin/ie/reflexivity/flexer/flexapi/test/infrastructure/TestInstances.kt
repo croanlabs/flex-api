@@ -95,7 +95,7 @@ fun GitHubIssueJpa.Companion.testInstance(gitHubRepository: GitHubRepositoryJpa,
         closedBy = creator
 )
 
-fun SubredditJpa.Companion.testInstance(project: ProjectJpa) =
+fun SubredditJpa.Companion.testInstance(project: ProjectJpa, moderators: MutableSet<UserJpa> = mutableSetOf()) =
         SubredditJpa(
                 project = project,
                 redditId = "anyRedditId",
@@ -103,7 +103,8 @@ fun SubredditJpa.Companion.testInstance(project: ProjectJpa) =
                 active_user_count = 100,
                 accounts_active = 100,
                 subscribers = 100,
-                created = LocalDateTime.now()
+                created = LocalDateTime.now(),
+                moderators = moderators
         )
 
 fun SubredditPostJpa.Companion.testInstance(subredditJpa: SubredditJpa, author: UserJpa) =

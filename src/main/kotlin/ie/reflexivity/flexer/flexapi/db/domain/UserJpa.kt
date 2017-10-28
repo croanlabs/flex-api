@@ -36,6 +36,9 @@ data class UserJpa(
         @ManyToMany(mappedBy = "collaborators")
         val gitHubRepositories: MutableSet<GitHubRepositoryJpa>? = mutableSetOf(),
 
+        @ManyToMany(mappedBy = "moderators")
+        val subredditModerators: MutableSet<SubredditJpa>? = mutableSetOf(),
+
         @OneToMany(mappedBy = "author", orphanRemoval = true)
         val authoredCommits: MutableSet<GitHubCommitJpa>? = mutableSetOf(),
 

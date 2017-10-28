@@ -425,6 +425,33 @@
         </sql>
     </changeSet>
 
+    <changeSet author="j_bax (generated)" id="1509187354381-1">
+        <createTable tableName="subreddit_moderators">
+            <column name="subreddit_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="platform" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="platform_user_id" type="VARCHAR(70)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1509187354381-2">
+        <addPrimaryKey columnNames="subreddit_id, platform, platform_user_id" tableName="subreddit_moderators" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1509187354381-3">
+        <addForeignKeyConstraint baseColumnNames="platform,platform_user_id" baseTableName="subreddit_moderators" constraintName="FK2patms18s026e4a578fet07xc" deferrable="false" initiallyDeferred="false" referencedColumnNames="platform,platform_user_id" referencedTableName="user" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1509187354381-4">
+        <addForeignKeyConstraint baseColumnNames="subreddit_id" baseTableName="subreddit_moderators" constraintName="FKhwkl3au1yf2qb5d5oa7251bej" deferrable="false" initiallyDeferred="false" referencedColumnNames="subreddit_id" referencedTableName="subreddit" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1509187354381-5">
+        <dropUniqueConstraint constraintName="UC_GIT_HUB_REPOSITORYGIT_HUB_ID_COL" tableName="git_hub_repository" />
+        <addUniqueConstraint columnNames="git_hub_id" constraintName="UC_GIT_HUB_REPOSITORYGIT_HUB_ID_COL" tableName="git_hub_repository" />
+    </changeSet>
+
     <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql" runAlways="true">
         <sql>
             GRANT USAGE ON SCHEMA flex_admin to flex_app;
