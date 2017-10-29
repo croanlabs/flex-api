@@ -451,6 +451,40 @@
         <dropUniqueConstraint constraintName="UC_GIT_HUB_REPOSITORYGIT_HUB_ID_COL" tableName="git_hub_repository" />
         <addUniqueConstraint columnNames="git_hub_id" constraintName="UC_GIT_HUB_REPOSITORYGIT_HUB_ID_COL" tableName="git_hub_repository" />
     </changeSet>
+    <changeSet author="j_bax (generated)" id="1509210760272-1">
+        <createTable tableName="git_hub_repository_aud">
+            <column name="git_hub_repository_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false" />
+            </column>
+            <column name="revtype" type="TINYINT" />
+            <column name="forks_count" type="INT" />
+            <column name="git_hub_id" type="INT" />
+            <column name="language" type="VARCHAR(255)" />
+            <column name="last_modified" type="TIMESTAMP" />
+            <column name="name" type="VARCHAR(255)" />
+            <column name="open_issues_count" type="INT" />
+            <column name="owner_name" type="VARCHAR(255)" />
+            <column name="star_gazers_count" type="INT" />
+            <column name="watchers_count" type="INT" />
+        </createTable>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1509210760272-2">
+        <createTable tableName="revinfo">
+            <column autoIncrement="true" name="rev" type="INT">
+                <constraints primaryKey="true" primaryKeyName="revinfoPK" />
+            </column>
+            <column name="revtstmp" type="BIGINT" />
+        </createTable>
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1509210760272-3">
+        <addPrimaryKey columnNames="git_hub_repository_id, rev" constraintName="git_hub_repository_audPK" tableName="git_hub_repository_aud" />
+    </changeSet>
+    <changeSet author="j_bax (generated)" id="1509210760272-4">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="git_hub_repository_aud" constraintName="FKf571hjxuygkc5ttjbr0mepgw0" deferrable="false" initiallyDeferred="false" referencedColumnNames="rev" referencedTableName="revinfo" />
+    </changeSet>
 
     <changeSet id="2017-08-22.01" author="j_bax" dbms="postgresql" runAlways="true">
         <sql>

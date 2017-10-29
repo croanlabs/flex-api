@@ -3,6 +3,8 @@ package ie.reflexivity.flexer.flexapi.db.domain
 import com.google.common.base.Objects
 import ie.reflexivity.flexer.flexapi.db.domain.GitHubRepositoryJpa.Companion.TABLE_NAME
 import org.hibernate.annotations.UpdateTimestamp
+import org.hibernate.envers.Audited
+import org.hibernate.envers.NotAudited
 import java.time.LocalDateTime
 import javax.persistence.CascadeType.ALL
 import javax.persistence.Column
@@ -25,6 +27,7 @@ import javax.persistence.Table
 @Table(name = TABLE_NAME, indexes = arrayOf(
         Index(name = "IDX_${TABLE_NAME}_GITHUBID", columnList = "gitHubId")
 ))
+@Audited
 data class GitHubRepositoryJpa(
 
         @Id
@@ -35,18 +38,22 @@ data class GitHubRepositoryJpa(
 
         @JoinColumn(name = ProjectJpa.ID_NAME)
         @ManyToOne(optional = false, fetch = FetchType.LAZY)
+        @NotAudited
         val project: ProjectJpa,
 
         @ManyToMany(cascade = arrayOf(ALL), fetch = EAGER)
         @JoinTable(name = "REPOSITORY_USER", joinColumns = arrayOf(JoinColumn(name = ProjectJpa.ID_NAME)),
                 inverseJoinColumns = arrayOf(JoinColumn(name = "platformUserId", referencedColumnName = "platformUserId"),
                         JoinColumn(name = "platform", referencedColumnName = "platform")))
+        @NotAudited
         val collaborators: MutableSet<UserJpa> = mutableSetOf(),
 
         @OneToMany(mappedBy = "repository")
+        @NotAudited
         val commits: MutableSet<GitHubCommitJpa> = mutableSetOf(),
 
         @OneToMany(mappedBy = "repository")
+        @NotAudited
         val issues: MutableSet<GitHubIssueJpa> = mutableSetOf(),
 
         @Column(unique = true)
@@ -92,7 +99,6 @@ data class GitHubRepositoryJpa(
 
         return Objects.equal(id, other.id)
                 && Objects.equal(gitHubId, other.gitHubId)
-                && Objects.equal(project.id, other.project.id)
                 && Objects.equal(name, other.name)
                 && Objects.equal(language, other.language)
                 && Objects.equal(ownerName, other.ownerName)
@@ -103,7 +109,7 @@ data class GitHubRepositoryJpa(
     }
 
     override fun hashCode(): Int {
-        return Objects.hashCode(id, gitHubId, project.id, name, language,
+        return Objects.hashCode(id, gitHubId, name, language,
                 ownerName, starGazersCount, watchersCount, forksCount, openIssuesCount)
     }
 }
